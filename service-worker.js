@@ -1,10 +1,10 @@
 const CACHE_NAME = 'mk-df-v1';
 const ASSETS = [
-  'Index.html',
+  'index.html',
   'manifest.json',
   'logo.webp',
-  'Images/Mario_Kart_DF1.webp',
-  'Images/fdecran.png'
+  'mario_kart_DF1.webp',
+  'fdecran.png'
 ];
 
 self.addEventListener('install', (event) => {

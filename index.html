@@ -135,7 +135,7 @@
         }
 
         .bg-home {
-            background-image: url("Images/Mario_Kart_DF1.webp");
+            background-image: url("mario_kart_DF1.webp");
             background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
@@ -286,19 +286,19 @@
             class="fixed bottom-6 left-0 right-0 flex flex-col sm:flex-row items-center justify-center gap-4 px-6 z-[100] scale-75 sm:scale-90 origin-bottom">
             <button onclick="nav('page-setup')" class="btn-mk8 !m-0 !max-w-none w-96 !pl-10">
                 <div class="btn-mk8-icon">
-                    <img src="Images/Personnages/Mario-1.webp" alt="Mario">
+                    <img src="mario-1.webp" alt="Mario">
                 </div>
                 <span class="whitespace-nowrap text-xl">Inscription des joueurs</span>
             </button>
             <button onclick="nav('page-fiche')" class="btn-mk8 !m-0 !max-w-none w-72 !pl-10">
                 <div class="btn-mk8-icon">
-                    <img src="Images/Kart/Kart1.png" alt="Kart">
+                    <img src="kart1.png" alt="Kart">
                 </div>
                 <span class="whitespace-nowrap text-xl">Fiche joueur</span>
             </button>
             <button onclick="nav('page-prof')" class="btn-mk8 !m-0 shadow-2xl !max-w-none w-80 !pl-10">
                 <div class="btn-mk8-icon">
-                    <img src="Images/Personnages/prof.png" alt="Prof">
+                    <img src="prof.png" alt="Prof">
                 </div>
                 <span class="whitespace-nowrap text-sm sm:text-base leading-none">Gestion des Team (prof)</span>
             </button>
@@ -308,7 +308,7 @@
 
     <div id="page-setup" class="page relative min-h-screen">
         <!-- BACKGROUND IMAGE -->
-        <img src="Images/Personnages/Allperso.jpg" class="fixed inset-0 w-full h-full object-cover opacity-40">
+        <img src="Allperso.jpg" class="fixed inset-0 w-full h-full object-cover opacity-40">
         <div class="fixed inset-0 bg-black/60"></div>
 
         <div class="relative z-10 p-6 min-h-screen overflow-y-auto">
@@ -517,7 +517,7 @@
             <div class="card-glass card-tall flex flex-col items-center justify-center !p-4 shadow-xl">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">PIÈCES D'OR</p>
                 <div class="flex items-center gap-2">
-                    <img src="Images/Item/Pieced'or.webp" class="w-12 h-12 object-contain" alt="Coins">
+                    <img src="Pieced'or.webp" class="w-12 h-12 object-contain" alt="Coins">
                     <span id="coins-display" class="text-5xl font-black text-yellow-400">0</span>
                 </div>
             </div>
@@ -550,7 +550,7 @@
                 <div class="flex items-center justify-around gap-4">
                     <div id="box"
                         class="w-24 h-24 bg-white/20 rounded-3xl flex items-center justify-center shadow-2xl overflow-hidden border-4 border-white/40">
-                        <img src="Images/Item/Caisse.webp" class="w-full h-full object-contain p-2" alt="Box">
+                        <img src="caisse.webp" class="w-full h-full object-contain p-2" alt="Box">
                     </div>
                     <button onclick="tirageItem()" class="btn-mk8 !mb-0 !w-auto px-10 py-4 !text-xl shadow-xl">
                         <span>Acheter (100)</span>
@@ -563,7 +563,7 @@
     <div id="page-prof" class="page bg-[#111827]">
         <!-- HEADER BANNER -->
         <div class="relative h-64 overflow-hidden shadow-2xl">
-            <img src="Images/fdecran.png" class="w-full h-full object-cover">
+            <img src="fdecran.png" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-[#111827] via-[#111827]/40 to-transparent"></div>
             <div class="absolute bottom-6 left-6 flex items-baseline gap-4">
                 <h2 class="mario-font text-5xl text-yellow-400 italic tracking-tight drop-shadow-lg">Gestion des
@@ -587,8 +587,7 @@
         <div
             class="card-glass relative overflow-hidden max-w-2xl w-full max-h-[95vh] overflow-y-auto !p-0 border-4 border-yellow-400 rounded-[40px] shadow-2xl">
             <!-- BACKGROUND IMAGE -->
-            <img src="Images/Personnages/Allperso.jpg"
-                class="absolute inset-0 w-full h-full object-cover opacity-20 blur-[2px]">
+            <img src="allperso.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 blur-[2px]">
             <div class="absolute inset-0 bg-black/40"></div>
 
             <!-- CONTENT -->
@@ -730,39 +729,39 @@
     <!-- MODAL CHOIX DU CIRCUIT -->
     <div id="modal-track-choice" class="fixed inset-0 bg-black/90 z-[100] hidden items-center justify-center p-4">
         <div class="card-glass max-w-md w-full !p-10 border-4 border-yellow-400 rounded-[40px] space-y-6 text-center">
-            <h3 class="mario-font text-3xl text-yellow-400 uppercase">Choisir un Circuit</h3>
+            <h3 class="mario-font text-xl sm:text-2xl text-yellow-400 uppercase">Choisir un Circuit</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button onclick="addTrack('Circuit Mario')"
                     class="relative group h-24 rounded-2xl overflow-hidden border-2 border-white/10 hover:border-yellow-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-blue-900/40">
-                    <img src="Images/Affiche_Circuit/AfficheCircuitMario.jpg.webp"
+                    <img src="affichecircuitmario.jpg.webp"
                         class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
                     <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
                     <span class="relative mario-font text-[10px] text-white">CIRCUIT MARIO</span>
                 </button>
                 <button onclick="addTrack('Route Arc en Ciel')"
                     class="relative group h-24 rounded-2xl overflow-hidden border-2 border-white/10 hover:border-yellow-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-pink-900/40">
-                    <img src="Images/Affiche_Circuit/Affiche_RouteArcEnCiel.webp"
+                    <img src="affiche_routearcenciel.webp"
                         class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
                     <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
                     <span class="relative mario-font text-[10px] text-white">ROUTE ARC EN CIEL</span>
                 </button>
                 <button onclick="addTrack('Chateau de Browser')"
                     class="relative group h-24 rounded-2xl overflow-hidden border-2 border-white/10 hover:border-yellow-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-red-900/40">
-                    <img src="Images/Affiche_Circuit/Affiche_ChateauBrowser.webp"
+                    <img src="affiche_chateauBrowser.webp"
                         class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
                     <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
                     <span class="relative mario-font text-[10px] text-white">CHATEAU DE BROWSER</span>
                 </button>
                 <button onclick="addTrack('Stade Wario')"
                     class="relative group h-24 rounded-2xl overflow-hidden border-2 border-white/10 hover:border-yellow-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-purple-900/40">
-                    <img src="Images/Affiche_Circuit/Affiche_StadeWaliugi.jpeg"
+                    <img src="affiche_stadeWaliugi.jpeg"
                         class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
                     <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
                     <span class="relative mario-font text-[10px] text-white">STADE WARIO</span>
                 </button>
                 <button onclick="addTrack('Champidrome')"
                     class="relative group h-24 rounded-2xl overflow-hidden border-2 border-white/10 hover:border-yellow-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-green-900/40 sm:col-span-2">
-                    <img src="Images/Affiche_Circuit/Affiche_Champidrome.webp"
+                    <img src="affiche_champidrome.webp"
                         class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
                     <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
                     <span class="relative mario-font text-[10px] text-white">CHAMPIDROME</span>
@@ -838,31 +837,31 @@
     <script>
         // LISTE DES PERSOS (3x5 = 15 persos)
         const persos = [
-            { n: "Boo", i: "Images/Personnages/Boo.webp" },
-            { n: "Bowser", i: "Images/Personnages/Browser.webp" },
-            { n: "Daisy", i: "Images/Personnages/Daisy.webp" },
-            { n: "DK", i: "Images/Personnages/Donkey-kong.webp" },
-            { n: "Koopa", i: "Images/Personnages/Koopa.webp" },
-            { n: "Link", i: "Images/Personnages/Link.webp" },
-            { n: "Luigi", i: "Images/Personnages/Luigi.webp" },
-            { n: "Mario", i: "Images/Personnages/Mario-1.webp" },
-            { n: "Metal Mario", i: "Images/Personnages/MarioMetal.webp" },
-            { n: "Peach", i: "Images/Personnages/Peach.webp" },
-            { n: "Toad", i: "Images/Personnages/Toad.webp" },
-            { n: "Toadette", i: "Images/Personnages/Toadette.webp" },
-            { n: "Waluigi", i: "Images/Personnages/Waluigi.webp" },
-            { n: "Wario", i: "Images/Personnages/Wario.webp" },
-            { n: "Yoshi", i: "Images/Personnages/Yoshi.webp" }
+            { n: "Boo", i: "boo.webp" },
+            { n: "Bowser", i: "browser.webp" },
+            { n: "Daisy", i: "daisy.webp" },
+            { n: "DK", i: "donkey-kong.webp" },
+            { n: "Koopa", i: "Koopa.webp" },
+            { n: "Link", i: "link.webp" },
+            { n: "Luigi", i: "luigi.webp" },
+            { n: "Mario", i: "mario-1.webp" },
+            { n: "Metal Mario", i: "MarioMetal.webp" },
+            { n: "Peach", i: "peach.webp" },
+            { n: "Toad", i: "Toad.webp" },
+            { n: "Toadette", i: "Toadette.webp" },
+            { n: "Waluigi", i: "Waluigi.webp" },
+            { n: "Wario", i: "Wario.webp" },
+            { n: "Yoshi", i: "yoshi.webp" }
         ];
 
         const karts = [
-            { n: "Kart Standard", i: "Images/Kart/Kart1.png" },
-            { n: "Super Kart", i: "Images/Kart/Kart2.webp" },
-            { n: "Proto Kart", i: "Images/Kart/Kart3.png" },
-            { n: "Moto Standard", i: "Images/Kart/Moto1.webp" },
-            { n: "Sport Moto", i: "Images/Kart/Moto2.webp" },
-            { n: "Circuit Moto", i: "Images/Kart/Moto3.webp" },
-            { n: "Turbo Moto", i: "Images/Kart/Moto4.webp" }
+            { n: "Kart Standard", i: "kart1.png" },
+            { n: "Super Kart", i: "kart2.webp" },
+            { n: "Proto Kart", i: "kart3.png" },
+            { n: "Moto Standard", i: "moto1.webp" },
+            { n: "Sport Moto", i: "moto2.webp" },
+            { n: "Circuit Moto", i: "moto3.webp" },
+            { n: "Turbo Moto", i: "moto4.webp" }
         ];
 
         let state = {
@@ -998,15 +997,15 @@
         });
 
         const itemPool = [
-            { n: "Champi", i: "Images/Item/Champignon.webp" },
-            { n: "Champi d'or", i: "Images/Item/Champignon-doree.webp" },
-            { n: "Carapace Verte", i: "Images/Item/CarapaceVerte.webp" },
-            { n: "Carapace Rouge", i: "Images/Item/CarapaceRouge.webp" },
-            { n: "Carapace Bleue", i: "Images/Item/Carapace-bleue.webp" },
-            { n: "Banane", i: "Images/Item/Banane.webp" },
-            { n: "Eclair", i: "Images/Item/Eclair.webp" },
-            { n: "Etoile", i: "Images/Item/Etoile.webp" },
-            { n: "Fusee", i: "Images/Item/Fusee.PNG.webp" }
+            { n: "Champi", i: "champignon.webp" },
+            { n: "Champi d'or", i: "champignon-doree.webp" },
+            { n: "Carapace Verte", i: "carapaceverte.webp" },
+            { n: "Carapace Rouge", i: "carapacerouge.webp" },
+            { n: "Carapace Bleue", i: "carapace-bleue.webp" },
+            { n: "Banane", i: "banane.webp" },
+            { n: "Eclair", i: "eclair.webp" },
+            { n: "Etoile", i: "etoile.webp" },
+            { n: "Fusee", i: "fusee.PNG.webp" }
         ];
 
         function getActiveTeam() {
@@ -1250,7 +1249,7 @@
         function tirageItem() {
             if (state.activeTeamIndex === -1) return;
             const tNode = getActiveTeam();
-            if (tNode.coins < 100) return mkAlert("Pas assez de pièces !", '<img src="Images/Item/Pieced\'or.webp" class="w-16 h-16 object-contain">');
+            if (tNode.coins < 100) return mkAlert("Pas assez de pièces !", '<img src="Pieced\'or.webp" class="w-16 h-16 object-contain">');
             if (tNode.items.length >= 3) return mkAlert("Inventaire plein (max 3) !", "🎒");
 
             tNode.coins -= 100;
@@ -1276,7 +1275,7 @@
 
                     // Reset box to caisse after a delay
                     setTimeout(() => {
-                        b.innerHTML = `<img src="Images/Item/Caisse.webp" class="w-full h-full object-contain p-1">`;
+                        b.innerHTML = `<img src="caisse.webp" class="w-full h-full object-contain p-1">`;
                     }, 2000);
                 }
             }, 80);
@@ -1365,7 +1364,7 @@
             let html = `
                 <div class="flex flex-wrap gap-4 items-center mb-6">
                     <button onclick="showAddTeamModal()" class="w-48 h-24 relative overflow-hidden border-2 border-[#facc15] rounded-2xl flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-lg group">
-                        <img src="Images/Personnages/Allperso.jpg" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                        <img src="allperso.jpg" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
                         <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-2">
                             <span class="text-2xl group-hover:scale-110 transition-transform shadow-lg">➕</span>
                             <span class="mario-font text-[10px] tracking-widest text-[#facc15] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">AJOUTER UNE TEAM</span>
@@ -1373,7 +1372,7 @@
                     </button>
                     
                     <button onclick="document.getElementById('modal-track-choice').classList.replace('hidden','flex')" class="w-48 h-24 relative overflow-hidden border-2 border-[#facc15] rounded-2xl flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-lg group">
-                        <img src="Images/Affiche_Circuit/Allcircuit.png" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                        <img src="allcircuit.png" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
                         <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-2">
                             <span class="text-2xl group-hover:scale-110 transition-transform shadow-lg">🏁</span>
                             <span class="mario-font text-[10px] tracking-widest text-[#facc15] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">CHOISIR UN PARCOURS</span>
@@ -1381,7 +1380,7 @@
                     </button>
 
                     <button onclick="applyGlobalVmaBonus()" class="w-48 h-24 relative overflow-hidden border-2 border-[#facc15] rounded-2xl flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-lg group">
-                        <img src="Images/Item/Pieced'or.webp" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                        <img src="Pieced'or.webp" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
                         <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-2">
                             <span class="text-2xl group-hover:rotate-12 transition-transform shadow-lg">🌟</span>
                             <span class="mario-font text-[10px] tracking-widest text-[#facc15] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">ATTRIBUER BONUS</span>
@@ -1391,18 +1390,18 @@
                     <div id="prof-track-list" class="flex flex-wrap gap-4 border-l border-white/10 pl-4">
                         ${(state.tracks || []).map(t => {
                 const imgMap = {
-                    'Circuit Mario': 'AfficheCircuitMario.jpg.webp',
-                    'Route Arc en Ciel': 'Affiche_RouteArcEnCiel.webp',
-                    'Chateau de Browser': 'Affiche_ChateauBrowser.webp',
-                    'Stade Wario': 'Affiche_StadeWaliugi.jpeg',
-                    'Champidrome': 'Affiche_Champidrome.webp'
+                    'Circuit Mario': 'affichecircuitmario.jpg.webp',
+                    'Route Arc en Ciel': 'affiche_routearcenciel.webp',
+                    'Chateau de Browser': 'affiche_chateauBrowser.webp',
+                    'Stade Wario': 'affiche_stadeWaliugi.jpeg',
+                    'Champidrome': 'affiche_champidrome.webp'
                 };
-                const img = imgMap[t.name] || 'AfficheCircuitMario.jpg.webp';
+                const img = imgMap[t.name] || 'affichecircuitmario.jpg.webp';
                 return `
                                 <div class="relative group w-44 h-24">
                                     <button onclick="openTrackDetail('${t.name}')" 
                                         class="w-full h-full rounded-2xl overflow-hidden border-2 border-white/10 hover:border-blue-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-blue-900/40">
-                                        <img src="Images/Affiche_Circuit/${img}" class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110">
+                                        <img src="${img}" class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110">
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                                         <div class="absolute bottom-2 left-2 right-2 text-left">
                                             <p class="mario-font text-[10px] text-white leading-tight drop-shadow-md truncate">${t.name.toUpperCase()}</p>
@@ -1462,7 +1461,7 @@
                         <td class="p-3 text-center">
                             <div class="flex items-center justify-center gap-1 text-lg font-black text-yellow-400">
                                 <span>${teamNode.coins}</span>
-                                <img src="Images/Item/Pieced'or.webp" class="w-4 h-4">
+                                <img src="Pieced'or.webp" class="w-4 h-4">
                             </div>
                         </td>
                         <td class="p-3 text-center">
@@ -1665,14 +1664,14 @@
 
             // Dynamic Hero Background
             const imgMap = {
-                'Circuit Mario': 'AfficheCircuitMario.jpg.webp',
-                'Route Arc en Ciel': 'Affiche_RouteArcEnCiel.webp',
-                'Chateau de Browser': 'Affiche_ChateauBrowser.webp',
-                'Stade Wario': 'Affiche_StadeWaliugi.jpeg',
-                'Champidrome': 'Affiche_Champidrome.webp'
+                'Circuit Mario': 'affichecircuitmario.jpg.webp',
+                'Route Arc en Ciel': 'affiche_routearcenciel.webp',
+                'Chateau de Browser': 'affiche_chateauBrowser.webp',
+                'Stade Wario': 'affiche_stadeWaliugi.jpeg',
+                'Champidrome': 'affiche_champidrome.webp'
             };
-            const imgFile = imgMap[name] || 'AfficheCircuitMario.jpg.webp';
-            document.getElementById('track-hero-banner').style.backgroundImage = `url('Images/Affiche_Circuit/${imgFile}')`;
+            const imgFile = imgMap[name] || 'affichecircuitmario.jpg.webp';
+            document.getElementById('track-hero-banner').style.backgroundImage = `url('${imgFile}')`;
 
             renderTrackContent();
             document.getElementById('modal-track-detail').classList.replace('hidden', 'flex');
@@ -1860,17 +1859,17 @@
 
         function showTrackLayout() {
             const imgMap = {
-                'Circuit Mario': 'Circuit_Mario.png',
-                'Route Arc en Ciel': 'Route_Arcenciel.png',
-                'Chateau de Browser': 'Chateau_de_Browser.webp',
-                'Stade Wario': 'StadeWario.webp',
-                'Champidrome': 'Champidrome.png.webp'
+                'Circuit Mario': 'circuit_mario.png',
+                'Route Arc en Ciel': 'route_arcenciel.png',
+                'Chateau de Browser': 'chateau_de_browser.webp',
+                'Stade Wario': 'stadewario.webp',
+                'Champidrome': 'champidrome.png.webp'
             };
-            const imgFile = imgMap[currentTrackName] || 'Circuit_Mario.png';
+            const imgFile = imgMap[currentTrackName] || 'circuit_mario.png';
             const modal = document.getElementById('modal-track-layout');
             const img = document.getElementById('track-layout-img');
 
-            img.src = `Images/Circuit/${imgFile}`;
+            img.src = imgFile;
             modal.classList.replace('hidden', 'flex');
         }
 
