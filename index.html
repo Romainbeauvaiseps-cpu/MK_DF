@@ -517,7 +517,7 @@
             <div class="card-glass card-tall flex flex-col items-center justify-center !p-4 shadow-xl">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">PIÈCES D'OR</p>
                 <div class="flex items-center gap-2">
-                    <img src="Pieced'or.webp" class="w-12 h-12 object-contain" alt="Coins">
+                    <img src="pieced'or.webp" class="w-12 h-12 object-contain" alt="Coins">
                     <span id="coins-display" class="text-5xl font-black text-yellow-400">0</span>
                 </div>
             </div>
@@ -841,16 +841,16 @@
             { n: "Bowser", i: "browser.webp" },
             { n: "Daisy", i: "daisy.webp" },
             { n: "DK", i: "donkey-kong.webp" },
-            { n: "Koopa", i: "Koopa.webp" },
+            { n: "Koopa", i: "koopa.webp" },
             { n: "Link", i: "link.webp" },
             { n: "Luigi", i: "luigi.webp" },
             { n: "Mario", i: "mario-1.webp" },
-            { n: "Metal Mario", i: "MarioMetal.webp" },
+            { n: "Metal Mario", i: "mariometal.webp" },
             { n: "Peach", i: "peach.webp" },
-            { n: "Toad", i: "Toad.webp" },
-            { n: "Toadette", i: "Toadette.webp" },
-            { n: "Waluigi", i: "Waluigi.webp" },
-            { n: "Wario", i: "Wario.webp" },
+            { n: "Toad", i: "toad.webp" },
+            { n: "Toadette", i: "toadette.webp" },
+            { n: "Waluigi", i: "waluigi.webp" },
+            { n: "Wario", i: "wario.webp" },
             { n: "Yoshi", i: "yoshi.webp" }
         ];
 
@@ -1249,7 +1249,7 @@
         function tirageItem() {
             if (state.activeTeamIndex === -1) return;
             const tNode = getActiveTeam();
-            if (tNode.coins < 100) return mkAlert("Pas assez de pièces !", '<img src="Pieced\'or.webp" class="w-16 h-16 object-contain">');
+            if (tNode.coins < 100) return mkAlert("Pas assez de pièces !", '<img src="pieced\'or.webp" class="w-16 h-16 object-contain">');
             if (tNode.items.length >= 3) return mkAlert("Inventaire plein (max 3) !", "🎒");
 
             tNode.coins -= 100;
@@ -1380,7 +1380,7 @@
                     </button>
 
                     <button onclick="applyGlobalVmaBonus()" class="w-48 h-24 relative overflow-hidden border-2 border-[#facc15] rounded-2xl flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-lg group">
-                        <img src="Pieced'or.webp" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                        <img src="pieced'or.webp" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
                         <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-2">
                             <span class="text-2xl group-hover:rotate-12 transition-transform shadow-lg">🌟</span>
                             <span class="mario-font text-[10px] tracking-widest text-[#facc15] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">ATTRIBUER BONUS</span>
@@ -1461,7 +1461,7 @@
                         <td class="p-3 text-center">
                             <div class="flex items-center justify-center gap-1 text-lg font-black text-yellow-400">
                                 <span>${teamNode.coins}</span>
-                                <img src="Pieced'or.webp" class="w-4 h-4">
+                                <img src="pieced'or.webp" class="w-4 h-4">
                             </div>
                         </td>
                         <td class="p-3 text-center">
