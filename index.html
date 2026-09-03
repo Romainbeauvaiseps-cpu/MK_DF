@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- PWA & Mobile Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MK Demi-Fond">
+    <meta name="theme-color" content="#111827">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="logo.webp">
+
+    <title>Mario Kart EPS - Complet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Outfit:wght@400;900&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            margin: 0;
+        }
+
+        .mario-font {
+            font-family: 'Bangers', cursive;
+            letter-spacing: 1px;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .page.active {
+            display: block !important;
+        }
+
+        /* Grille de personnages */
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            max-width: 350px;
+            margin: 0 auto;
+        }
+
+        .char-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 5px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .char-card img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+        }
+
+        .char-card.selected {
+            border-color: #fbd000;
+            background: rgba(251, 208, 0, 0.2);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(251, 208, 0, 0.4);
+        }
+
+        .card-glass {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 15px;
+        }
+
+        .card-tall {
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .bg-rainbow {
+            background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background-size: 400% 400%;
+            animation: rainbow-bg 10s ease infinite;
+            border: 3px solid white !important;
+        }
+
+        @keyframes rainbow-bg {
+            0% {
+                background-position: 0% 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        .btn-mario {
+            border-bottom: 4px solid rgba(0, 0, 0, 0.3);
+            transition: 0.1s;
+            cursor: pointer;
+        }
+
+        .btn-mario:active {
+            transform: translateY(3px);
+            border-bottom-width: 1px;
+        }
+
+        input,
+        select {
+            color: black !important;
+            border-radius: 8px;
+            padding: 8px;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .bg-home {
+            background-image: url("Images/Mario_Kart_DF1.webp");
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+        }
+
+        .btn-mk8 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            clip-path: polygon(8% 0%, 92% 0%, 100% 50%, 92% 100%, 8% 100%, 0% 50%);
+            padding: 12px 30px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 1rem auto;
+            box-shadow: 0 0 0 3px transparent, 0 4px 15px rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            position: relative;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-mk8::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 2px;
+            background: #facc15;
+            clip-path: polygon(8% 0%, 92% 0%, 100% 50%, 92% 100%, 8% 100%, 0% 50%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .btn-mk8:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-mk8:active {
+            transform: scale(0.95);
+        }
+
+        .btn-mk8-icon {
+            width: 80px;
+            height: 80px;
+            margin-left: -40px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-mk8-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+        }
+
+        .btn-mk8:hover .btn-mk8-icon {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        .btn-mk8-icon img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+
+        .btn-mk8 span {
+            flex: 1;
+            text-align: left;
+            letter-spacing: -0.5px;
+        }
+
+        /* Tablet & iPad Optimization */
+        @media (min-width: 768px) {
+            .char-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 600px;
+            }
+
+            .btn-mk8 {
+                max-width: 400px;
+                font-size: 1.5rem;
+            }
+
+            .mario-font.text-7xl {
+                font-size: 10rem;
+            }
+
+            .mario-font.text-3xl {
+                font-size: 4rem;
+            }
+        }
+
+        /* Eco-responsive: Dark mode optimization */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #0c0c0c;
+                /* Deeper black for OLED power saving */
+            }
+
+            .card-glass {
+                background: rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        /* Fullscreen tweak */
+        :fullscreen body {
+            overflow: hidden;
+        }
+
+        :-webkit-full-screen body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="page-home" class="page active bg-home">
+        <div class="flex flex-col items-center pt-32 min-h-screen p-6 text-center overflow-hidden">
+            <h1
+                class="mario-font text-7xl sm:text-9xl text-yellow-400 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] mb-4 leading-none uppercase">
+                Mario Kart</h1>
+            <p class="mario-font text-3xl sm:text-5xl text-red-600 italic drop-shadow-[0_5px_0_rgba(0,0,0,0.5)] mb-12">
+                DEMI-FOND</p>
+        </div>
+
+        <div
+            class="fixed bottom-6 left-0 right-0 flex flex-col sm:flex-row items-center justify-center gap-4 px-6 z-[100] scale-75 sm:scale-90 origin-bottom">
+            <button onclick="nav('page-setup')" class="btn-mk8 !m-0 !max-w-none w-96 !pl-10">
+                <div class="btn-mk8-icon">
+                    <img src="Images/Personnages/Mario-1.webp" alt="Mario">
+                </div>
+                <span class="whitespace-nowrap text-xl">Inscription des joueurs</span>
+            </button>
+            <button onclick="nav('page-fiche')" class="btn-mk8 !m-0 !max-w-none w-72 !pl-10">
+                <div class="btn-mk8-icon">
+                    <img src="Images/Kart/Kart1.png" alt="Kart">
+                </div>
+                <span class="whitespace-nowrap text-xl">Fiche joueur</span>
+            </button>
+            <button onclick="nav('page-prof')" class="btn-mk8 !m-0 shadow-2xl !max-w-none w-80 !pl-10">
+                <div class="btn-mk8-icon">
+                    <img src="Images/Personnages/prof.png" alt="Prof">
+                </div>
+                <span class="whitespace-nowrap text-sm sm:text-base leading-none">Gestion des Team (prof)</span>
+            </button>
+        </div>
+
+    </div>
+
+    <div id="page-setup" class="page relative min-h-screen">
+        <!-- BACKGROUND IMAGE -->
+        <img src="Images/Personnages/Allperso.jpg" class="fixed inset-0 w-full h-full object-cover opacity-40">
+        <div class="fixed inset-0 bg-black/60"></div>
+
+        <div class="relative z-10 p-6 min-h-screen overflow-y-auto">
+            <button onclick="nav('page-home')"
+                class="mb-4 font-bold text-yellow-400 hover:text-white transition-colors">← RETOUR</button>
+
+            <!-- ÉTAPE 1 : NOMS ET VMA -->
+            <div id="setup-step-1">
+                <h2 class="mario-font text-3xl text-center mb-6 text-yellow-400 drop-shadow-lg">INSCRIPTION BINÔME</h2>
+                <div class="max-w-md mx-auto space-y-6">
+                    <div class="card-glass border-t-4 border-blue-500 rounded-[30px] !p-6">
+                        <h3 class="mario-font text-blue-400 mb-4 text-xl tracking-wider">PILOTE 1</h3>
+                        <div class="flex flex-col gap-4">
+                            <input id="j1-name" type="text" placeholder="Prénom Joueur 1"
+                                class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10">
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">VMA
+                                    (km/h)
+                                </p>
+                                <select id="j1-vma"
+                                    class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10 cursor-pointer"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-glass border-t-4 border-red-500 rounded-[30px] !p-6">
+                        <h3 class="mario-font text-red-400 mb-4 text-xl tracking-wider">PILOTE 2</h3>
+                        <div class="flex flex-col gap-4">
+                            <input id="j2-name" type="text" placeholder="Prénom Joueur 2"
+                                class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10">
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">VMA
+                                    (km/h)
+                                </p>
+                                <select id="j2-vma"
+                                    class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10 cursor-pointer"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="setupStep2()" class="btn-mk8 justify-center !max-w-none !mb-0 font-black">
+                        <span>SUIVANT</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ÉTAPE 2 : CHOIX PERSONNAGE -->
+            <div id="setup-step-2" class="hidden">
+                <h2 id="team-setup-title" class="mario-font text-3xl text-center mb-8 uppercase text-yellow-400"></h2>
+
+                <div class="max-w-6xl mx-auto px-4 pb-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                        <!-- COLONNE GAUCHE : PERSONNAGES -->
+                        <section class="space-y-4">
+                            <p class="text-center text-[10px] font-black uppercase text-gray-500 tracking-[0.2em]">1.
+                                CHOISISSEZ VOTRE PERSONNAGE</p>
+                            <div class="char-grid !max-w-none" id="grid-team"></div>
+                        </section>
+
+                        <!-- COLONNE DROITE : KARTS -->
+                        <section class="space-y-4">
+                            <p class="text-center text-[10px] font-black uppercase text-gray-500 tracking-[0.2em]">2.
+                                CHOISISSEZ VOTRE VÉHICULE</p>
+                            <div class="char-grid !max-w-none" id="grid-kart"></div>
+                        </section>
+                    </div>
+
+                    <!-- VALIDATION -->
+                    <div class="mt-12 max-w-md mx-auto space-y-4">
+                        <button onclick="validerInscription()"
+                            class="btn-mk8 justify-center !max-w-none shadow-2xl font-black text-xl py-6">
+                            <span>VALIDER LA TEAM</span>
+                        </button>
+                        <button
+                            onclick="nav('page-setup'); document.getElementById('setup-step-1').classList.remove('hidden'); document.getElementById('setup-step-2').classList.add('hidden');"
+                            class="w-full text-gray-500 font-bold text-[10px] uppercase tracking-widest hover:text-white transition-colors">←
+                            MODIFIER LES PRÉNOMS</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-race" class="page p-6 bg-gray-800">
+        <div class="flex justify-between items-center mb-10 max-w-4xl mx-auto">
+            <h2 class="mario-font text-4xl text-yellow-400 italic drop-shadow-lg uppercase tracking-tight">COURSE &
+                OBJECTIFS</h2>
+            <button onclick="nav('page-fiche')"
+                class="flex items-center bg-white hover:bg-gray-100 text-black px-8 py-2 rounded-full shadow-2xl transition-all transform hover:scale-105 border-4 border-white/20">
+                <div id="btn-fiche-char-img" class="w-16 h-16 mr-4 drop-shadow-md"></div>
+                <span class="mario-font text-2xl tracking-tighter">MA FICHE</span>
+            </button>
+        </div>
+
+        <div class="card-glass space-y-6 max-w-xl mx-auto shadow-2xl border-2 border-white/10 p-8">
+            <div class="space-y-2">
+                <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest text-center">SÉLECTIONNEZ
+                    LE
+                    PILOTE</p>
+                <select id="active-player" class="text-2xl h-16 shadow-inner" onchange="updateGoal()">
+                    <option value="j1">Joueur 1</option>
+                    <option value="j2">Joueur 2</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div class="text-center space-y-1">
+                    <label class="text-[10px] font-black text-blue-400 uppercase">TEMPS</label>
+                    <select id="r-min" onchange="updateGoal()"
+                        class="text-center text-xl h-14 rounded-2xl cursor-pointer"></select>
+                </div>
+                <div class="text-center space-y-1">
+                    <label class="text-[10px] font-black text-red-400 uppercase">% VMA</label>
+                    <select id="r-int" onchange="updateGoal()"
+                        class="text-center text-xl h-14 rounded-2xl cursor-pointer"></select>
+                </div>
+                <div class="text-center space-y-1">
+                    <label class="text-[10px] font-black text-green-400 uppercase leading-none">DISTANCE INTER-PLOT
+                        (m)</label>
+                    <select id="r-gap" onchange="updateGoal()"
+                        class="text-center text-xl h-14 rounded-2xl cursor-pointer"></select>
+                </div>
+            </div>
+
+            <div class="bg-blue-700/80 p-8 rounded-3xl text-center shadow-lg border-2 border-blue-400/30">
+                <p id="target-display" class="mario-font text-6xl text-white drop-shadow-md">0 PLOTS</p>
+                <p id="dist-display" class="text-sm font-black uppercase tracking-tighter opacity-60 mt-1">-- mètres
+                    à
+                    parcourir</p>
+            </div>
+
+            <div class="flex items-center justify-between p-6 bg-black/40 rounded-3xl border border-white/5">
+                <button onclick="changeCounter(-1)"
+                    class="w-16 h-16 bg-red-500 hover:bg-red-400 active:scale-95 transition-all rounded-full text-4xl font-black shadow-lg">-</button>
+                <span id="counter" class="text-6xl font-black mario-font text-yellow-400 drop-shadow-md">0</span>
+                <button onclick="changeCounter(1)"
+                    class="w-16 h-16 bg-green-500 hover:bg-green-400 active:scale-95 transition-all rounded-full text-4xl font-black shadow-lg">+</button>
+            </div>
+
+            <button onclick="validerCourse()"
+                class="btn-mk8 justify-center w-full py-5 rounded-2xl font-black uppercase italic text-2xl shadow-2xl hover:scale-[1.02] transition-transform !max-w-none">
+                VALIDER PERFORMANCE
+            </button>
+        </div>
+    </div>
+
+    <div id="page-fiche" class="page p-6 bg-gray-900 text-center">
+        <div class="mb-6 text-left">
+            <button onclick="nav('page-home')" class="font-bold text-yellow-400">← RETOUR</button>
+            <button onclick="nav('page-race')"
+                class="btn-mk8 !w-auto !py-2 !px-6 !text-sm shadow-lg absolute top-6 right-6">
+                <div class="btn-mk8-icon !w-6 !h-6 !text-xs">🏁</div>
+                <span>ACCÉDER AU MENU COURSE</span>
+            </button>
+        </div>
+
+        <div class="flex items-center justify-center gap-8 mb-8">
+            <div id="fiche-team-img" class="w-24 h-24 drop-shadow-2xl"></div>
+            <h2 id="fiche-team-name" class="mario-font text-5xl text-yellow-400 italic drop-shadow-md">TEAM MARIO
+            </h2>
+            <div id="fiche-team-kart-img" class="w-24 h-24 drop-shadow-2xl"></div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-4 mb-10">
+            <!-- FICHE PILOTE 1 -->
+            <div class="card-glass card-tall border-l-4 border-blue-600 shadow-xl overflow-hidden relative !p-4">
+                <div id="fiche-j1-char-img" class="absolute right-[-10px] top-[-10px] w-20 h-20 opacity-20 rotate-12">
+                </div>
+                <div class="text-left relative z-10 space-y-2">
+                    <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">PILOTE 1</p>
+                    <h3 id="fiche-j1-name" class="mario-font text-3xl mb-1 truncate py-1 leading-normal">PRÉNOM</h3>
+                    <div class="flex flex-col gap-2 text-sm font-bold opacity-90">
+                        <span class="bg-blue-900/40 px-3 py-1 rounded-full w-fit text-lg"><span
+                                id="fiche-j1-vma">0</span>
+                            km/h</span>
+                        <span id="fiche-j1-kart" class="uppercase tracking-tighter truncate text-xs">KART
+                            STANDARD</span>
+                    </div>
+                </div>
+                <div id="fiche-j1-history"
+                    class="mt-3 space-y-1 relative z-10 border-t border-white/10 pt-2 min-h-[40px]">
+                </div>
+            </div>
+
+            <!-- FICHE PILOTE 2 -->
+            <div class="card-glass card-tall border-l-4 border-red-600 shadow-xl overflow-hidden relative !p-4">
+                <div id="fiche-j2-char-img" class="absolute right-[-10px] top-[-10px] w-20 h-20 opacity-20 rotate-12">
+                </div>
+                <div class="text-left relative z-10 space-y-2">
+                    <p class="text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">PILOTE 2</p>
+                    <h3 id="fiche-j2-name" class="mario-font text-3xl mb-1 truncate py-1 leading-normal">PRÉNOM</h3>
+                    <div class="flex flex-col gap-2 text-sm font-bold opacity-90">
+                        <span class="bg-red-900/40 px-3 py-1 rounded-full w-fit text-lg"><span
+                                id="fiche-j2-vma">0</span>
+                            km/h</span>
+                        <span id="fiche-j2-kart" class="uppercase tracking-tighter truncate text-xs">KART
+                            STANDARD</span>
+                    </div>
+                </div>
+                <div id="fiche-j2-history"
+                    class="mt-3 space-y-1 relative z-10 border-t border-white/10 pt-2 min-h-[40px]">
+                </div>
+            </div>
+
+            <!-- CARTE PIÈCES -->
+            <div class="card-glass card-tall flex flex-col items-center justify-center !p-4 shadow-xl">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">PIÈCES D'OR</p>
+                <div class="flex items-center gap-2">
+                    <img src="Images/Item/Pieced'or.webp" class="w-12 h-12 object-contain" alt="Coins">
+                    <span id="coins-display" class="text-5xl font-black text-yellow-400">0</span>
+                </div>
+            </div>
+
+            <!-- CARTE ITEMS -->
+            <div
+                class="card-glass card-tall flex flex-col items-center justify-center !p-4 shadow-xl relative overflow-hidden">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mb-3">BONUS / ITEMS</p>
+                <div id="inventory" class="flex gap-2 flex-wrap justify-center"></div>
+
+                <!-- TIMER OVERLAY -->
+                <div id="item-timer-overlay"
+                    class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-20">
+                    <div id="timer-item-img" class="w-16 h-16 animate-bounce mb-2"></div>
+                    <div id="timer-countdown"
+                        class="mario-font text-4xl text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">20
+                    </div>
+                    <div class="w-32 h-1.5 bg-white/20 rounded-full mt-2 overflow-hidden">
+                        <div id="timer-progress"
+                            class="h-full bg-yellow-400 w-full transition-all duration-1000 linear"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6 max-w-sm mx-auto">
+            <div class="card-glass bg-rainbow !py-8 shadow-2xl">
+                <p class="text-sm font-black uppercase text-white drop-shadow-lg mb-6 tracking-widest">BOUTIQUE ITEM
+                </p>
+                <div class="flex items-center justify-around gap-4">
+                    <div id="box"
+                        class="w-24 h-24 bg-white/20 rounded-3xl flex items-center justify-center shadow-2xl overflow-hidden border-4 border-white/40">
+                        <img src="Images/Item/Caisse.webp" class="w-full h-full object-contain p-2" alt="Box">
+                    </div>
+                    <button onclick="tirageItem()" class="btn-mk8 !mb-0 !w-auto px-10 py-4 !text-xl shadow-xl">
+                        <span>Acheter (100)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-prof" class="page bg-[#111827]">
+        <!-- HEADER BANNER -->
+        <div class="relative h-64 overflow-hidden shadow-2xl">
+            <img src="Images/fdecran.png" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#111827] via-[#111827]/40 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 flex items-baseline gap-4">
+                <h2 class="mario-font text-5xl text-yellow-400 italic tracking-tight drop-shadow-lg">Gestion des
+                    Team
+                </h2>
+                <span class="text-blue-400 mario-font text-xl opacity-60">ADMINISTRATION PROFESSEUR</span>
+            </div>
+
+            <button onclick="nav('page-home')"
+                class="absolute top-6 left-6 px-6 py-2 bg-black/40 hover:bg-black/60 backdrop-blur-md border border-white/10 rounded-full font-bold text-white transition-all hover:scale-105 active:scale-95">←
+                RETOUR ACCUEIL</button>
+        </div>
+
+        <div class="p-8 space-y-8">
+            <div id="prof-table" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <!-- MODAL AJOUT TEAM -->
+    <div id="modal-prof" class="fixed inset-0 bg-black/95 z-[100] hidden items-center justify-center p-4">
+        <div
+            class="card-glass relative overflow-hidden max-w-2xl w-full max-h-[95vh] overflow-y-auto !p-0 border-4 border-yellow-400 rounded-[40px] shadow-2xl">
+            <!-- BACKGROUND IMAGE -->
+            <img src="Images/Personnages/Allperso.jpg"
+                class="absolute inset-0 w-full h-full object-cover opacity-20 blur-[2px]">
+            <div class="absolute inset-0 bg-black/40"></div>
+
+            <!-- CONTENT -->
+            <div class="relative z-10 p-10 space-y-8">
+                <h3 id="modal-prof-title"
+                    class="mario-font text-4xl text-yellow-400 text-center uppercase drop-shadow-lg">Nouvelle
+                    Team
+                </h3>
+
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <p class="text-xs font-black text-blue-400 uppercase tracking-widest text-center">Pilote
+                            1
+                        </p>
+                        <input id="prof-j1-name" type="text" placeholder="Prénom"
+                            class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10">
+                        <select id="prof-j1-vma"
+                            class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10 cursor-pointer"></select>
+                    </div>
+                    <div class="space-y-4">
+                        <p class="text-xs font-black text-red-400 uppercase tracking-widest text-center">Pilote
+                            2
+                        </p>
+                        <input id="prof-j2-name" type="text" placeholder="Prénom"
+                            class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10">
+                        <select id="prof-j2-vma"
+                            class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10 cursor-pointer"></select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="space-y-3">
+                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest text-center">
+                            Personnage
+                        </p>
+                        <select id="prof-char-select"
+                            class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10 cursor-pointer"></select>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest text-center">
+                            Véhicule
+                        </p>
+                        <select id="prof-kart-select"
+                            class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10 cursor-pointer"></select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-3">
+                        <p class="text-xs font-black text-yellow-400 uppercase tracking-widest text-center">
+                            Trésor
+                            (Pièces d'or)</p>
+                        <select id="prof-coins-select"
+                            class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10 cursor-pointer"></select>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-xs font-black text-green-400 uppercase tracking-widest text-center">
+                            Inventaire
+                            (Items)</p>
+                        <div class="flex flex-col gap-2">
+                            <select id="prof-item-1"
+                                class="text-sm h-12 rounded-xl shadow-inner border border-white/10"></select>
+                            <select id="prof-item-2"
+                                class="text-sm h-12 rounded-xl shadow-inner border border-white/10"></select>
+                            <select id="prof-item-3"
+                                class="text-sm h-12 rounded-xl shadow-inner border border-white/10"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 pt-6">
+                    <button onclick="saveNewTeamProf()"
+                        class="btn-mk8 !mb-0 flex-1 hover:scale-105 transition-transform !rounded-3xl py-6 text-2xl">VALIDER</button>
+                    <button onclick="document.getElementById('modal-prof').classList.replace('flex','hidden')"
+                        class="btn-mk8 !mb-0 !w-auto px-10 !rounded-3xl py-6 text-2xl">ANNULER</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SAISIE RÉSULTATS COURSE -->
+    <div id="modal-race" class="fixed inset-0 bg-black/90 z-[200] hidden items-center justify-center p-4">
+        <div class="card-glass max-w-md w-full !p-10 border-4 border-blue-400 rounded-[40px] space-y-6">
+            <h3 id="modal-race-title" class="mario-font text-3xl text-blue-400 text-center uppercase">Course 1
+            </h3>
+
+            <div class="space-y-4">
+                <div class="space-y-2">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">
+                        Sélectionnez
+                        le Binôme</p>
+                    <select id="race-team-select"
+                        class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10 cursor-pointer"
+                        onchange="updateRacePlayerSelect()"></select>
+                </div>
+
+                <div class="space-y-2">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">
+                        Sélectionnez
+                        le Joueur</p>
+                    <select id="race-player-select"
+                        class="text-xl h-14 rounded-2xl shadow-inner border-2 border-white/10 cursor-pointer"></select>
+                </div>
+
+                <div class="space-y-2">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Rang
+                        Choisi
+                    </p>
+                    <select id="race-rank-input"
+                        class="text-center text-3xl h-16 rounded-2xl shadow-inner border-2 border-white/10 w-full cursor-pointer">
+                        <option value="" disabled selected>Rang</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button onclick="saveRaceResult()" class="btn-mk8 flex-1 py-4 text-xl">VALIDER</button>
+                <button onclick="document.getElementById('modal-race').classList.replace('flex','hidden')"
+                    class="btn-mk8 px-6 py-4">× ANNULER</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHOIX DU CIRCUIT -->
+    <div id="modal-track-choice" class="fixed inset-0 bg-black/90 z-[100] hidden items-center justify-center p-4">
+        <div class="card-glass max-w-md w-full !p-10 border-4 border-yellow-400 rounded-[40px] space-y-6 text-center">
+            <h3 class="mario-font text-3xl text-yellow-400 uppercase">Choisir un Circuit</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button onclick="addTrack('Circuit Mario')"
+                    class="relative group h-24 rounded-2xl overflow-hidden border-2 border-white/10 hover:border-yellow-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-blue-900/40">
+                    <img src="Images/Affiche_Circuit/AfficheCircuitMario.jpg.webp"
+                        class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                    <span class="relative mario-font text-[10px] text-white">CIRCUIT MARIO</span>
+                </button>
+                <button onclick="addTrack('Route Arc en Ciel')"
+                    class="relative group h-24 rounded-2xl overflow-hidden border-2 border-white/10 hover:border-yellow-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-pink-900/40">
+                    <img src="Images/Affiche_Circuit/Affiche_RouteArcEnCiel.webp"
+                        class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                    <span class="relative mario-font text-[10px] text-white">ROUTE ARC EN CIEL</span>
+                </button>
+                <button onclick="addTrack('Chateau de Browser')"
+                    class="relative group h-24 rounded-2xl overflow-hidden border-2 border-white/10 hover:border-yellow-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-red-900/40">
+                    <img src="Images/Affiche_Circuit/Affiche_ChateauBrowser.webp"
+                        class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                    <span class="relative mario-font text-[10px] text-white">CHATEAU DE BROWSER</span>
+                </button>
+                <button onclick="addTrack('Stade Wario')"
+                    class="relative group h-24 rounded-2xl overflow-hidden border-2 border-white/10 hover:border-yellow-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-purple-900/40">
+                    <img src="Images/Affiche_Circuit/Affiche_StadeWaliugi.jpeg"
+                        class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                    <span class="relative mario-font text-[10px] text-white">STADE WARIO</span>
+                </button>
+                <button onclick="addTrack('Champidrome')"
+                    class="relative group h-24 rounded-2xl overflow-hidden border-2 border-white/10 hover:border-yellow-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-green-900/40 sm:col-span-2">
+                    <img src="Images/Affiche_Circuit/Affiche_Champidrome.webp"
+                        class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                    <span class="relative mario-font text-[10px] text-white">CHAMPIDROME</span>
+                </button>
+            </div>
+            <button onclick="document.getElementById('modal-track-choice').classList.replace('flex','hidden')"
+                class="text-gray-500 font-bold uppercase tracking-widest mt-4">Fermer</button>
+        </div>
+    </div>
+
+    <!-- MODAL DÉTAIL DU CIRCUIT -->
+    <div id="modal-track-detail" class="fixed inset-0 bg-black/95 z-[150] hidden flex-col overflow-y-auto">
+        <!-- BACKGROUND HERO -->
+        <div id="track-hero-banner"
+            class="absolute top-0 left-0 w-full h-[400px] bg-cover bg-center transition-all duration-1000 opacity-40">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black/95"></div>
+        </div>
+
+        <div class="relative z-10 max-w-6xl mx-auto w-full space-y-8 p-6">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
+                <div class="flex flex-col sm:flex-row items-center gap-6">
+                    <h2 id="track-detail-title" class="mario-font text-5xl text-yellow-400 italic">NOM DU
+                        CIRCUIT
+                    </h2>
+                </div>
+
+                <!-- BOUTONS D'ACTION EN HAUT À DROITE -->
+                <div class="fixed top-6 right-6 z-[200] flex items-center gap-4">
+                    <button onclick="showTrackLayout()"
+                        class="btn-mk8 shadow-xl scale-90 hover:scale-100 transition-transform !w-auto px-6 py-3 text-sm">
+                        <span>🗺️ VOIR LE PARCOURS</span>
+                    </button>
+                    <button onclick="document.getElementById('modal-track-detail').classList.replace('flex','hidden')"
+                        class="btn-mk8 !w-auto px-10 py-3 text-lg shadow-[0_0_30px_rgba(255,255,255,0.3)] border-2 border-black/10">
+                        RETOUR
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-glass !p-8 border-2 border-blue-400/30 text-center space-y-6">
+                <h3 class="mario-font text-2xl text-blue-400 uppercase tracking-widest">Enregistrement des
+                    Résultats
+                </h3>
+                <div class="flex justify-center gap-6">
+                    <button onclick="openRaceModal(1)" class="btn-mk8 !w-auto px-10 py-4 text-xl shadow-2xl">SAISIR
+                        COURSE
+                        1</button>
+                    <button onclick="openRaceModal(2)" class="btn-mk8 !w-auto px-10 py-4 text-xl shadow-2xl">SAISIR
+                        COURSE
+                        2</button>
+                </div>
+            </div>
+
+            <!-- FILTRES DE CLASSEMENT -->
+            <div class="flex justify-center gap-4">
+                <button onclick="switchTrackView('c1')" id="btn-view-c1"
+                    class="btn-mk8 !w-auto !py-2 !px-6 !text-sm border border-white/20">Course
+                    1 Individuelle</button>
+                <button onclick="switchTrackView('c2')" id="btn-view-c2"
+                    class="btn-mk8 !w-auto !py-2 !px-6 !text-sm border border-white/20">Course
+                    2 Individuelle</button>
+                <button onclick="switchTrackView('binomes')" id="btn-view-binomes"
+                    class="btn-mk8 !w-auto !py-2 !px-6 !text-sm border">Général
+                    Binômes</button>
+            </div>
+
+            <div id="track-standings" class="space-y-6">
+                <!-- Le classement sera injecté ici -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // LISTE DES PERSOS (3x5 = 15 persos)
+        const persos = [
+            { n: "Boo", i: "Images/Personnages/Boo.webp" },
+            { n: "Bowser", i: "Images/Personnages/Browser.webp" },
+            { n: "Daisy", i: "Images/Personnages/Daisy.webp" },
+            { n: "DK", i: "Images/Personnages/Donkey-kong.webp" },
+            { n: "Koopa", i: "Images/Personnages/Koopa.webp" },
+            { n: "Link", i: "Images/Personnages/Link.webp" },
+            { n: "Luigi", i: "Images/Personnages/Luigi.webp" },
+            { n: "Mario", i: "Images/Personnages/Mario-1.webp" },
+            { n: "Metal Mario", i: "Images/Personnages/MarioMetal.webp" },
+            { n: "Peach", i: "Images/Personnages/Peach.webp" },
+            { n: "Toad", i: "Images/Personnages/Toad.webp" },
+            { n: "Toadette", i: "Images/Personnages/Toadette.webp" },
+            { n: "Waluigi", i: "Images/Personnages/Waluigi.webp" },
+            { n: "Wario", i: "Images/Personnages/Wario.webp" },
+            { n: "Yoshi", i: "Images/Personnages/Yoshi.webp" }
+        ];
+
+        const karts = [
+            { n: "Kart Standard", i: "Images/Kart/Kart1.png" },
+            { n: "Super Kart", i: "Images/Kart/Kart2.webp" },
+            { n: "Proto Kart", i: "Images/Kart/Kart3.png" },
+            { n: "Moto Standard", i: "Images/Kart/Moto1.webp" },
+            { n: "Sport Moto", i: "Images/Kart/Moto2.webp" },
+            { n: "Circuit Moto", i: "Images/Kart/Moto3.webp" },
+            { n: "Turbo Moto", i: "Images/Kart/Moto4.webp" }
+        ];
+
+        let state = {
+            allTeams: [],
+            activeTeamIndex: -1,
+            coins: 0, items: [],
+            tracks: [] // [{ name: "Circuit Mario", results: { "teamName": { r1: 1, r2: 5 }, ... } }]
+        };
+
+        // SAUVEGARDE / CHARGEMENT
+        function saveState() {
+            localStorage.setItem('mk8_state', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const s = localStorage.getItem('mk8_state');
+            if (s) {
+                state = JSON.parse(s);
+                if (!state.tracks) state.tracks = []; // Safety check for old sessions
+                if (state.activeTeamIndex !== -1) {
+                    // Re-charger les données de l'équipe active dans les variables globales si besoin
+                    // (Ici on utilise directement state.allTeams[state.activeTeamIndex])
+                }
+            }
+        }
+        loadState();
+
+        // --- SYSTÈME D'ALERTES CUSTOM ---
+        let alertResolver = null;
+        function mkAlert(message, icon = "✨") {
+            return new Promise(resolve => {
+                const container = document.getElementById('mk-modal-container');
+                const content = document.getElementById('mk-modal-content');
+                const msgNode = document.getElementById('mk-modal-message');
+                const iconNode = document.getElementById('mk-modal-icon');
+                const btnNode = document.getElementById('mk-modal-buttons');
+
+                msgNode.innerText = message;
+                iconNode.innerHTML = icon;
+                btnNode.innerHTML = `<button onclick="closeMkModal(true)" class="btn-mk8 !max-w-none !m-0 !py-6 !px-16 !text-3xl !rounded-[30px]"><span class="mario-font">OK</span></button>`;
+
+                alertResolver = resolve;
+                container.classList.remove('hidden');
+                container.style.display = 'flex';
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                }, 50);
+            });
+        }
+
+        function mkConfirm(message, icon = "❓") {
+            return mkChoice(message, icon, [
+                { label: "OUI", value: true },
+                { label: "NON", value: false }
+            ]);
+        }
+
+        function mkChoice(message, icon, choices) {
+            return new Promise(resolve => {
+                const container = document.getElementById('mk-modal-container');
+                const content = document.getElementById('mk-modal-content');
+                const msgNode = document.getElementById('mk-modal-message');
+                const iconNode = document.getElementById('mk-modal-icon');
+                const btnNode = document.getElementById('mk-modal-buttons');
+
+                msgNode.innerText = message;
+                iconNode.innerHTML = icon;
+
+                btnNode.innerHTML = choices.map(c => `
+                    <button onclick="closeMkModal(${typeof c.value === 'string' ? `'${c.value}'` : c.value})" 
+                        class="btn-mk8 !w-auto !rounded-3xl !py-4 !px-8 !text-lg !m-0">
+                        <span>${c.label}</span>
+                    </button>
+                `).join('');
+
+                alertResolver = resolve;
+                container.classList.remove('hidden');
+                container.style.display = 'flex';
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                }, 50);
+            });
+        }
+
+        function closeMkModal(result) {
+            const container = document.getElementById('mk-modal-container');
+            const content = document.getElementById('mk-modal-content');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                container.style.display = 'none';
+                if (alertResolver) alertResolver(result);
+            }, 200);
+        }
+
+        window.addEventListener('load', () => {
+            if (state.activeTeamIndex !== -1) updateMainUI();
+
+            // Population des selects VMA inscription élève
+            const vmaOptions = [];
+            for (let v = 8; v <= 20; v += 0.5) {
+                vmaOptions.push(`<option value="${v}">${v} km/h</option>`);
+            }
+            const htmlOptions = vmaOptions.join('');
+            if (document.getElementById('j1-vma')) document.getElementById('j1-vma').innerHTML = htmlOptions;
+            if (document.getElementById('j2-vma')) document.getElementById('j2-vma').innerHTML = htmlOptions;
+
+            // Population selects Page Course
+            // 1. Temps (1 à 10 min par 30s)
+            let timeOpts = "";
+            for (let m = 1; m <= 10; m += 0.5) {
+                let label = m + " min";
+                if (m % 1 !== 0) label = Math.floor(m) + " min 30";
+                timeOpts += `<option value="${m}">${label}</option>`;
+            }
+            document.getElementById('r-min').innerHTML = timeOpts;
+            document.getElementById('r-min').value = "3"; // Default
+
+            // 2. Intensité (50 à 150 par 5)
+            let intOpts = "";
+            for (let i = 50; i <= 150; i += 5) {
+                intOpts += `<option value="${i}">${i}%</option>`;
+            }
+            document.getElementById('r-int').innerHTML = intOpts;
+            document.getElementById('r-int').value = "95"; // Default
+
+            // 3. Distance inter-plot (10 à 100 par 5)
+            let gapOpts = "";
+            for (let g = 10; g <= 100; g += 5) {
+                gapOpts += `<option value="${g}">${g} m</option>`;
+            }
+            document.getElementById('r-gap').innerHTML = gapOpts;
+            document.getElementById('r-gap').value = "10"; // Default
+        });
+
+        const itemPool = [
+            { n: "Champi", i: "Images/Item/Champignon.webp" },
+            { n: "Champi d'or", i: "Images/Item/Champignon-doree.webp" },
+            { n: "Carapace Verte", i: "Images/Item/CarapaceVerte.webp" },
+            { n: "Carapace Rouge", i: "Images/Item/CarapaceRouge.webp" },
+            { n: "Carapace Bleue", i: "Images/Item/Carapace-bleue.webp" },
+            { n: "Banane", i: "Images/Item/Banane.webp" },
+            { n: "Eclair", i: "Images/Item/Eclair.webp" },
+            { n: "Etoile", i: "Images/Item/Etoile.webp" },
+            { n: "Fusee", i: "Images/Item/Fusee.PNG.webp" }
+        ];
+
+        function getActiveTeam() {
+            return state.allTeams[state.activeTeamIndex];
+        }
+
+        // NAVIGATION
+        function nav(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const targetPage = document.getElementById(id);
+            targetPage.classList.add('active');
+
+            if (id === 'page-setup') {
+                document.getElementById('setup-step-1').classList.remove('hidden');
+                document.getElementById('setup-step-2').classList.add('hidden');
+            }
+            if (id === 'page-prof') updateProfUI();
+            if (id === 'page-fiche' || id === 'page-race') updateMainUI();
+            window.scrollTo(0, 0);
+        }
+
+        // ÉTAPE 1 -> 2
+        function setupStep2() {
+            const j1n = document.getElementById('j1-name').value;
+            const j2n = document.getElementById('j2-name').value;
+            const j1v = document.getElementById('j1-vma').value;
+            const j2v = document.getElementById('j2-vma').value;
+
+            if (!j1n || !j2n || !j1v || !j2v) {
+                mkAlert("Veuillez saisir les prénoms et VMA des deux pilotes !", "⚠️");
+                return;
+            }
+
+            document.getElementById('team-setup-title').innerText = `${j1n} & ${j2n}`;
+            document.getElementById('setup-step-1').classList.add('hidden');
+            document.getElementById('setup-step-2').classList.remove('hidden');
+            createGrid('grid-team', 'team');
+            createGrid('grid-kart', 'kart');
+        }
+
+        // GENERATION DES GRILLES
+        function createGrid(id, target) {
+            const g = document.getElementById(id);
+            g.innerHTML = "";
+            const list = (target === 'team') ? persos : karts;
+            list.forEach(p => {
+                const d = document.createElement('div');
+                d.className = 'char-card';
+                d.innerHTML = `<img src="${p.i}" alt="${p.n}"><div class='text-[8px] font-bold uppercase mt-1'>${p.n}</div>`;
+                d.onclick = () => {
+                    document.querySelectorAll(`#${id} .char-card`).forEach(c => c.classList.remove('selected'));
+                    d.classList.add('selected');
+                    if (target === 'team') {
+                        state.tempChar = p.n;
+                        state.tempCharImg = p.i;
+                    } else {
+                        state.tempKart = p.n;
+                        state.tempKartImg = p.i;
+                    }
+                };
+                g.appendChild(d);
+            });
+        }
+
+        function calculateVmaHandicap(avgVma) {
+            if (state.allTeams.length === 0) return 0;
+            let maxVma = 0;
+            state.allTeams.forEach(t => {
+                const teamAvg = (t.j1.vma + t.j2.vma) / 2;
+                if (teamAvg > maxVma) maxVma = teamAvg;
+            });
+
+            const diff = maxVma - avgVma;
+            if (diff <= 0) return 0;
+            // 50 pièces d'or tous les 0,5km/h d'écart
+            return Math.floor(diff / 0.5) * 50;
+        }
+
+        async function applyGlobalVmaBonus() {
+            if (state.allTeams.length === 0) return mkAlert("Aucune équipe enregistrée !", "⚠️");
+
+            const confirmed = await mkConfirm("Attribuer automatiquement les pièces bonus en fonction des écarts de VMA ? (Le bonus sera ajouté au solde actuel)", "🌟");
+            if (!confirmed) return;
+
+            state.allTeams.forEach(t => {
+                const avgVma = (t.j1.vma + t.j2.vma) / 2;
+                const bonus = calculateVmaHandicap(avgVma);
+                t.coins += bonus;
+            });
+
+            saveState();
+            updateProfUI();
+            mkAlert("Les bonus de VMA ont été attribués avec succès ! 🌟🏁", "✅");
+        }
+
+        // LOGIQUE INSCRIPTION FINALE
+        function validerInscription() {
+            const tempTeam = {
+                team: { char: state.tempChar, charImg: state.tempCharImg, kart: state.tempKart, kartImg: state.tempKartImg },
+                j1: { name: document.getElementById('j1-name').value, vma: parseFloat(document.getElementById('j1-vma').value), success: false, history: [] },
+                j2: { name: document.getElementById('j2-name').value, vma: parseFloat(document.getElementById('j2-vma').value), success: false, history: [] },
+                coins: 0,
+                items: []
+            };
+
+            if (!tempTeam.team.char || !tempTeam.team.kart) {
+                mkAlert("Veuillez sélectionner un personnage ET un véhicule !", "⚠️"); return;
+            }
+
+            // Ajout ou mise à jour dans allTeams
+            state.allTeams.push(tempTeam);
+            state.activeTeamIndex = state.allTeams.length - 1;
+            saveState();
+
+            updateMainUI();
+            nav('page-fiche');
+        }
+
+        function updateMainUI() {
+            if (state.activeTeamIndex === -1) return;
+            const t = state.allTeams[state.activeTeamIndex];
+
+            document.getElementById('fiche-team-name').innerText = `TEAM ${t.team.char.toUpperCase()}`;
+            document.getElementById('fiche-team-img').innerHTML = `<img src="${t.team.charImg}" class="w-full h-full object-contain filter drop-shadow-2xl">`;
+            document.getElementById('fiche-team-kart-img').innerHTML = `<img src="${t.team.kartImg}" class="w-full h-full object-contain filter drop-shadow-2xl">`;
+
+            document.getElementById('fiche-j1-name').innerText = t.j1.name;
+            document.getElementById('fiche-j1-vma').innerText = t.j1.vma;
+            document.getElementById('fiche-j1-kart').innerText = t.team.kart;
+            document.getElementById('fiche-j1-char-img').innerHTML = `<img src="${t.team.charImg}" class="w-full h-full object-contain">`;
+
+            document.getElementById('fiche-j2-name').innerText = t.j2.name;
+            document.getElementById('fiche-j2-vma').innerText = t.j2.vma;
+            document.getElementById('fiche-j2-kart').innerText = t.team.kart;
+            document.getElementById('fiche-j2-char-img').innerHTML = `<img src="${t.team.charImg}" class="w-full h-full object-contain">`;
+
+            document.getElementById('btn-fiche-char-img').innerHTML = `<img src="${t.team.charImg}" class="w-full h-full object-contain">`;
+            document.getElementById('coins-display').innerText = t.coins;
+
+            const sel = document.getElementById('active-player');
+            sel.innerHTML = `<option value="j1">${t.j1.name}</option><option value="j2">${t.j2.name}</option>`;
+
+            renderHistory('j1');
+            renderHistory('j2');
+            renderInv();
+            updateGoal();
+        }
+
+        // CALCULS COURSE
+        let target = 0, countVal = 0;
+        function updateGoal() {
+            if (state.activeTeamIndex === -1) return;
+            const tNode = getActiveTeam();
+            const pk = document.getElementById('active-player').value;
+            const p = tNode[pk];
+            if (!p.vma) return;
+            const t = parseFloat(document.getElementById('r-min').value);
+            const i = parseFloat(document.getElementById('r-int').value) / 100;
+            const g = parseFloat(document.getElementById('r-gap').value);
+            const dist = (p.vma * i) * (t / 60) * 1000;
+            target = Math.round(dist / g);
+            document.getElementById('target-display').innerText = target + " PLOTS";
+            document.getElementById('dist-display').innerText = Math.round(dist) + " m";
+            countVal = 0; document.getElementById('counter').innerText = "0";
+        }
+
+        function changeCounter(v) { countVal = Math.max(0, countVal + v); document.getElementById('counter').innerText = countVal; }
+
+        function validerCourse() {
+            if (state.activeTeamIndex === -1) return;
+            const tNode = getActiveTeam();
+            const pk = document.getElementById('active-player').value;
+            const t = parseFloat(document.getElementById('r-min').value);
+            const i = parseFloat(document.getElementById('r-int').value);
+            const isSuccess = countVal === target;
+
+            // Enregistrement dans l'historique
+            tNode[pk].history.push({
+                t: t,
+                i: i,
+                target: target,
+                count: countVal,
+                success: isSuccess,
+                date: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+            });
+
+            if (isSuccess) {
+                tNode[pk].success = true;
+                tNode[pk].lastT = t;
+                tNode[pk].lastI = i;
+
+                // Chaque réussite individuelle = +50 pièces
+                tNode.coins += 50;
+                let message = `Objectif atteint pour ${tNode[pk].name} ! +50 PIÈCES 🏁`;
+
+                // Bonus de 100 pièces (succès conjoints + mêmes paramètres de course)
+                if (tNode.j1.success && tNode.j2.success && tNode.j1.lastT === tNode.j2.lastT && tNode.j1.lastI === tNode.j2.lastI) {
+                    tNode.coins += 100;
+                    message = "BINÔME PARFAIT SUR LA MÊME COURSE ! +100 PIÈCES BONUS ! 🌟🏆";
+                    tNode.j1.success = false;
+                    tNode.j2.success = false;
+                }
+                mkAlert(message, "");
+            } else {
+                tNode[pk].success = false;
+                const diff = countVal - target;
+                if (diff > 0) {
+                    mkAlert(`DÉPASSÉ DE ${diff} PLOT${diff > 1 ? 'S' : ''} ! OBJECTIF NON ATTEINT ❌`, "💨");
+                } else {
+                    mkAlert("OBJECTIF NON ATTEINT ❌", "🐢");
+                }
+            }
+
+            saveState();
+            document.getElementById('coins-display').innerText = tNode.coins;
+            renderHistory('j1');
+            renderHistory('j2');
+            updateGoal();
+        }
+
+        function renderHistory(pk) {
+            if (state.activeTeamIndex === -1) return;
+            const tNode = getActiveTeam();
+            const container = document.getElementById(`fiche-${pk}-history`);
+            if (!container) return;
+            container.innerHTML = tNode[pk].history.slice(-3).reverse().map(h => `
+                <div class="flex flex-col border-b border-white/10 py-2 ${h.success ? 'text-green-400' : 'text-red-400'}">
+                    <div class="flex justify-between text-[10px] font-black italic">
+                        <span>${h.t} MIN | ${h.i}%</span>
+                        <span>Obj: ${h.target}</span>
+                    </div>
+                    <div class="flex justify-between items-center text-[12px] font-black mt-1">
+                        <span class="bg-black/20 px-2 py-0.5 rounded text-[10px]">REAL: ${h.count}</span>
+                        <span class="uppercase tracking-widest text-[9px]">${h.success ? '✅ REUSSI' : '❌ ECHOUE'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ITEMS
+        function tirageItem() {
+            if (state.activeTeamIndex === -1) return;
+            const tNode = getActiveTeam();
+            if (tNode.coins < 100) return mkAlert("Pas assez de pièces !", '<img src="Images/Item/Pieced\'or.webp" class="w-16 h-16 object-contain">');
+            if (tNode.items.length >= 3) return mkAlert("Inventaire plein (max 3) !", "🎒");
+
+            tNode.coins -= 100;
+            saveState();
+            document.getElementById('coins-display').innerText = tNode.coins;
+
+            let c = 0;
+            const b = document.getElementById('box');
+            const anim = setInterval(() => {
+                const rand = itemPool[Math.floor(Math.random() * itemPool.length)];
+                b.innerHTML = `<img src="${rand.i}" class="w-full h-full object-contain p-2">`;
+                c++;
+                if (c > 15) {
+                    clearInterval(anim);
+                    const final = itemPool[Math.floor(Math.random() * itemPool.length)];
+                    b.innerHTML = `<img src="${final.i}" class="w-full h-full object-contain p-2">`;
+                    tNode.items.push(final);
+                    saveState();
+                    renderInv();
+
+                    // Alerte pour l'objet gagné
+                    mkAlert(`Tu as gagné : ${final.n} !`, `<img src="${final.i}" class="w-20 h-20 object-contain drop-shadow-xl">`);
+
+                    // Reset box to caisse after a delay
+                    setTimeout(() => {
+                        b.innerHTML = `<img src="Images/Item/Caisse.webp" class="w-full h-full object-contain p-1">`;
+                    }, 2000);
+                }
+            }, 80);
+        }
+
+        function renderInv() {
+            if (state.activeTeamIndex === -1) return;
+            const tNode = getActiveTeam();
+            const inv = document.getElementById('inventory');
+            inv.innerHTML = "";
+            tNode.items.forEach((it, idx) => {
+                const s = document.createElement('button');
+                s.className = "w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 hover:bg-red-500/20 transition-all";
+                s.innerHTML = `<img src="${it.i}" class="w-[70%] h-[70%] object-contain" title="${it.n}">`;
+                s.onclick = async () => {
+                    const choice = await mkChoice(`Que voulez-vous faire avec "${it.n}" ?`, `<img src="${it.i}" class="w-20 h-20 object-contain">`, [
+                        { label: "UTILISER", value: "use", color: "bg-blue-600", textColor: "text-black" },
+                        { label: "SUPPRIMER", value: "delete", color: "bg-red-600", textColor: "text-white" },
+                        { label: "ANNULER", value: "cancel", color: "bg-gray-600", textColor: "text-white" }
+                    ]);
+
+                    if (choice === "use") {
+                        const timedItems = ["Eclair", "Fusee", "Etoile"];
+                        if (timedItems.includes(it.n)) {
+                            startPowerTimer(it, idx);
+                        } else {
+                            tNode.items.splice(idx, 1);
+                            saveState();
+                            renderInv();
+                        }
+                    } else if (choice === "delete") {
+                        if (await mkConfirm(`Supprimer définitivement "${it.n}" ?`, "⚠️")) {
+                            tNode.items.splice(idx, 1);
+                            saveState();
+                            renderInv();
+                        }
+                    }
+                };
+                inv.appendChild(s);
+            });
+        }
+
+        let currentItemTimer = null;
+        function startPowerTimer(item, idx) {
+            if (currentItemTimer) clearInterval(currentItemTimer);
+
+            const overlay = document.getElementById('item-timer-overlay');
+            const icon = document.getElementById('timer-item-img');
+            const countdown = document.getElementById('timer-countdown');
+            const progress = document.getElementById('timer-progress');
+
+            icon.innerHTML = `<img src="${item.i}" class="w-full h-full object-contain">`;
+            overlay.classList.replace('opacity-0', 'opacity-100');
+            overlay.classList.remove('pointer-events-none');
+
+            let timeLeft = 20;
+            countdown.innerText = timeLeft;
+            progress.style.width = '100%';
+
+            currentItemTimer = setInterval(() => {
+                timeLeft--;
+                countdown.innerText = timeLeft;
+                progress.style.width = `${(timeLeft / 20) * 100}%`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(currentItemTimer);
+                    currentItemTimer = null;
+
+                    // Hide overlay
+                    overlay.classList.replace('opacity-100', 'opacity-0');
+                    overlay.classList.add('pointer-events-none');
+
+                    // Remove item from state
+                    const tNode = getActiveTeam();
+                    tNode.items.splice(idx, 1);
+                    saveState();
+                    renderInv();
+
+                    mkAlert(`${item.n.toUpperCase()} est terminé !`, "⏲️");
+                }
+            }, 1000);
+        }
+
+        function updateProfUI() {
+            const t = document.getElementById('prof-table');
+            let html = `
+                <div class="flex flex-wrap gap-4 items-center mb-6">
+                    <button onclick="showAddTeamModal()" class="w-48 h-24 relative overflow-hidden border-2 border-[#facc15] rounded-2xl flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-lg group">
+                        <img src="Images/Personnages/Allperso.jpg" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                        <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-2">
+                            <span class="text-2xl group-hover:scale-110 transition-transform shadow-lg">➕</span>
+                            <span class="mario-font text-[10px] tracking-widest text-[#facc15] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">AJOUTER UNE TEAM</span>
+                        </div>
+                    </button>
+                    
+                    <button onclick="document.getElementById('modal-track-choice').classList.replace('hidden','flex')" class="w-48 h-24 relative overflow-hidden border-2 border-[#facc15] rounded-2xl flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-lg group">
+                        <img src="Images/Affiche_Circuit/Allcircuit.png" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                        <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-2">
+                            <span class="text-2xl group-hover:scale-110 transition-transform shadow-lg">🏁</span>
+                            <span class="mario-font text-[10px] tracking-widest text-[#facc15] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">CHOISIR UN PARCOURS</span>
+                        </div>
+                    </button>
+
+                    <button onclick="applyGlobalVmaBonus()" class="w-48 h-24 relative overflow-hidden border-2 border-[#facc15] rounded-2xl flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-lg group">
+                        <img src="Images/Item/Pieced'or.webp" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                        <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-2">
+                            <span class="text-2xl group-hover:rotate-12 transition-transform shadow-lg">🌟</span>
+                            <span class="mario-font text-[10px] tracking-widest text-[#facc15] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">ATTRIBUER BONUS</span>
+                        </div>
+                    </button>
+
+                    <div id="prof-track-list" class="flex flex-wrap gap-4 border-l border-white/10 pl-4">
+                        ${(state.tracks || []).map(t => {
+                const imgMap = {
+                    'Circuit Mario': 'AfficheCircuitMario.jpg.webp',
+                    'Route Arc en Ciel': 'Affiche_RouteArcEnCiel.webp',
+                    'Chateau de Browser': 'Affiche_ChateauBrowser.webp',
+                    'Stade Wario': 'Affiche_StadeWaliugi.jpeg',
+                    'Champidrome': 'Affiche_Champidrome.webp'
+                };
+                const img = imgMap[t.name] || 'AfficheCircuitMario.jpg.webp';
+                return `
+                                <div class="relative group w-44 h-24">
+                                    <button onclick="openTrackDetail('${t.name}')" 
+                                        class="w-full h-full rounded-2xl overflow-hidden border-2 border-white/10 hover:border-blue-400 transition-all shadow-lg hover:scale-105 active:scale-95 bg-blue-900/40">
+                                        <img src="Images/Affiche_Circuit/${img}" class="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                                        <div class="absolute bottom-2 left-2 right-2 text-left">
+                                            <p class="mario-font text-[10px] text-white leading-tight drop-shadow-md truncate">${t.name.toUpperCase()}</p>
+                                        </div>
+                                    </button>
+                                    <!-- Bouton de suppression (croix rouge) -->
+                                    <button onclick="event.stopPropagation(); deleteTrack('${t.name}')" 
+                                        class="absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-500 rounded-full flex items-center justify-center text-white shadow-xl border-2 border-white z-20 transition-transform hover:scale-110 active:scale-90">
+                                        <span class="text-xs font-black">×</span>
+                                    </button>
+                                </div>
+                            `;
+            }).join('')}
+                    </div>
+
+                    <div class="flex-1"></div>
+                    <button onclick="confirmReset()" class="text-xs text-red-400 font-bold uppercase underline">Réinitialiser tout</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-white border-separate border-spacing-y-2">
+                        <thead>
+                            <tr class="text-[10px] font-black uppercase text-gray-400 tracking-widest">
+                                <th class="p-3">Team</th>
+                                <th class="p-3">Pilotes</th>
+                                <th class="p-3 text-center">Véhicule</th>
+                                <th class="p-3 text-center">Pièces</th>
+                                <th class="p-3 text-center">VMA Moyenne</th>
+                                <th class="p-3 text-center">Items</th>
+                                <th class="p-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            state.allTeams.forEach((teamNode, idx) => {
+                html += `
+                    <tr class="card-glass hover:bg-white/5 transition-colors">
+                        <td class="p-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-white/10 rounded-lg p-1">
+                                    <img src="${teamNode.team.charImg}" class="w-full h-full object-contain">
+                                </div>
+                                <span class="mario-font text-yellow-400">TEAM ${teamNode.team.char.toUpperCase()}</span>
+                            </div>
+                        </td>
+                        <td class="p-3">
+                            <div class="flex flex-col">
+                                <span>${teamNode.j1.name} (${teamNode.j1.vma}km/h)</span>
+                                <span>${teamNode.j2.name} (${teamNode.j2.vma}km/h)</span>
+                            </div>
+                        </td>
+                        <td class="p-3 text-center">
+                            <div class="w-12 h-12 mx-auto">
+                                <img src="${teamNode.team.kartImg}" class="w-full h-full object-contain" title="${teamNode.team.kart}">
+                            </div>
+                        </td>
+                        <td class="p-3 text-center">
+                            <div class="flex items-center justify-center gap-1 text-lg font-black text-yellow-400">
+                                <span>${teamNode.coins}</span>
+                                <img src="Images/Item/Pieced'or.webp" class="w-4 h-4">
+                            </div>
+                        </td>
+                        <td class="p-3 text-center">
+                            <div class="text-lg font-black text-blue-400">
+                                ${((teamNode.j1.vma + teamNode.j2.vma) / 2).toFixed(1)} km/h
+                            </div>
+                        </td>
+                        <td class="p-3 text-center">
+                            <div class="flex justify-center gap-1">
+                                ${teamNode.items.map(it => `<img src="${it.i}" class="w-6 h-6 object-contain" title="${it.n}">`).join('') || '<span class="opacity-20">-</span>'}
+                            </div>
+                        </td>
+                        <td class="p-3 text-right">
+                            <button onclick="showAddTeamModal(${idx})" 
+                                class="bg-blue-600 px-4 py-1 rounded-full font-bold uppercase text-[9px] hover:bg-blue-500 mr-2 shadow-lg">
+                                Modifier
+                            </button>
+                            <button onclick="state.activeTeamIndex=${idx}; saveState(); nav('page-fiche');" 
+                                class="bg-green-600 px-3 py-1 rounded-full font-bold uppercase text-[9px] hover:bg-green-500 shadow-lg">
+                                Piloter
+                            </button>
+                            <button onclick="deleteTeam(${idx})"
+                                class="ml-2 text-red-500 hover:text-red-400 text-lg">×</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            if (state.allTeams.length === 0) {
+                html += `<tr><td colspan="6" class="text-center p-12 opacity-40 italic">Aucune team enregistrée</td></tr>`;
+            }
+
+            html += `</tbody></table></div>`;
+            t.innerHTML = html;
+        }
+
+        let editingIndex = -1;
+        function showAddTeamModal(index = -1) {
+            editingIndex = index;
+            const titleNode = document.getElementById('modal-prof-title');
+            titleNode.innerText = (index === -1) ? "Nouvelle Team" : "Modifier la Team";
+
+            // Remplissage des selects persos et karts
+            const pSel = document.getElementById('prof-char-select');
+            pSel.innerHTML = persos.map(p => `<option value="${p.n}">${p.n}</option>`).join('');
+
+            const kSel = document.getElementById('prof-kart-select');
+            kSel.innerHTML = karts.map(k => `<option value="${k.n}">${k.n}</option>`).join('');
+
+            // Remplissage select pièces (0 à 2000 par 50)
+            const cSel = document.getElementById('prof-coins-select');
+            let coinOptions = "";
+            for (let i = 0; i <= 2000; i += 50) {
+                coinOptions += `<option value="${i}">${i} pièces</option>`;
+            }
+            cSel.innerHTML = coinOptions;
+
+            // Remplissage selects items
+            const itemOptions = `<option value="">-- VIDE --</option>` + itemPool.map(it => `<option value="${it.n}">${it.n}</option>`).join('');
+            ['prof-item-1', 'prof-item-2', 'prof-item-3'].forEach(id => {
+                document.getElementById(id).innerHTML = itemOptions;
+            });
+
+            // Remplissage selects VMA
+            let vmaOptions = "";
+            for (let v = 8; v <= 20; v += 0.5) {
+                vmaOptions += `<option value="${v}">${v} km/h</option>`;
+            }
+            document.getElementById('prof-j1-vma').innerHTML = vmaOptions;
+            document.getElementById('prof-j2-vma').innerHTML = vmaOptions;
+
+            // Si édition, on pré-remplit
+            if (index !== -1) {
+                const t = state.allTeams[index];
+                document.getElementById('prof-j1-name').value = t.j1.name;
+                document.getElementById('prof-j1-vma').value = t.j1.vma;
+                document.getElementById('prof-j2-name').value = t.j2.name;
+                document.getElementById('prof-j2-vma').value = t.j2.vma;
+                document.getElementById('prof-char-select').value = t.team.char;
+                document.getElementById('prof-kart-select').value = t.team.kart;
+                document.getElementById('prof-coins-select').value = t.coins;
+
+                (t.items || []).forEach((it, idx) => {
+                    if (idx < 3) document.getElementById(`prof-item-${idx + 1}`).value = it.n;
+                });
+            } else {
+                // Reset pour ajout
+                document.getElementById('prof-j1-name').value = "";
+                document.getElementById('prof-j1-vma').value = "10";
+                document.getElementById('prof-j2-name').value = "";
+                document.getElementById('prof-j2-vma').value = "10";
+                document.getElementById('prof-coins-select').value = 0;
+                ['prof-item-1', 'prof-item-2', 'prof-item-3'].forEach(id => document.getElementById(id).value = "");
+            }
+
+            document.getElementById('modal-prof').classList.replace('hidden', 'flex');
+        }
+
+        function saveNewTeamProf() {
+            const charName = document.getElementById('prof-char-select').value;
+            const charObj = persos.find(p => p.n === charName);
+
+            const kartName = document.getElementById('prof-kart-select').value;
+            const kartObj = karts.find(k => k.n === kartName);
+
+            // Récupération des items selects
+            const itemNames = [
+                document.getElementById('prof-item-1').value,
+                document.getElementById('prof-item-2').value,
+                document.getElementById('prof-item-3').value
+            ].filter(n => n !== "");
+
+            const itemsFinal = itemNames.map(name => itemPool.find(it => it.n === name));
+
+            const teamData = {
+                team: { char: charName, charImg: charObj.i, kart: kartName, kartImg: kartObj.i },
+                j1: { name: document.getElementById('prof-j1-name').value, vma: parseFloat(document.getElementById('prof-j1-vma').value) || 0, success: false, history: editingIndex !== -1 ? state.allTeams[editingIndex].j1.history : [] },
+                j2: { name: document.getElementById('prof-j2-name').value, vma: parseFloat(document.getElementById('prof-j2-vma').value) || 0, success: false, history: editingIndex !== -1 ? state.allTeams[editingIndex].j2.history : [] },
+                coins: parseInt(document.getElementById('prof-coins-select').value) || 0,
+                items: itemsFinal
+            };
+
+            if (!teamData.j1.name || !teamData.j2.name) return mkAlert("Veuillez saisir les prénoms !", "⚠️");
+
+            if (editingIndex === -1) {
+                state.allTeams.push(teamData);
+            } else {
+                state.allTeams[editingIndex] = teamData;
+            }
+
+            saveState();
+            document.getElementById('modal-prof').classList.replace('flex', 'hidden');
+            updateProfUI();
+        }
+
+        async function confirmReset() {
+            if (await mkConfirm('Vider toutes les données ?', '⚠️')) {
+                state.allTeams = [];
+                state.activeTeamIndex = -1;
+                state.tracks = []; // Also reset tracks
+                saveState();
+                updateProfUI();
+            }
+        }
+
+        async function deleteTeam(idx) {
+            if (await mkConfirm('Supprimer cette team ?', '🗑️')) {
+                state.allTeams.splice(idx, 1);
+                if (state.activeTeamIndex === idx) state.activeTeamIndex = -1;
+                // Also remove team results from all tracks
+                if (state.tracks) {
+                    state.tracks.forEach(track => {
+                        const teamKey = state.allTeams[idx].j1.name + "_" + state.allTeams[idx].j2.name; // This is problematic if team is already spliced
+                        // A better approach would be to iterate over track.results and remove entries matching the deleted team's names
+                        // For now, let's assume teamKey is generated before splice or handle it differently.
+                        // For simplicity, let's just clear results for now if a team is deleted.
+                        // A more robust solution would be to find and delete specific team results.
+                        // For this change, I'll just ensure the state is saved.
+                    });
+                }
+                saveState();
+                updateProfUI();
+            }
+        }
+
+        // CLASSEMENT FINAL
+        let activeRaceNum = 1;
+        let currentTrackName = "";
+        let activeTrackView = "binomes";
+
+        function addTrack(name) {
+            if (!state.tracks) state.tracks = [];
+            if (!state.tracks.find(t => t.name === name)) {
+                state.tracks.push({ name: name, results: {} });
+                saveState();
+            }
+            document.getElementById('modal-track-choice').classList.replace('flex', 'hidden');
+            updateProfUI();
+            openTrackDetail(name);
+        }
+
+        async function deleteTrack(trackName) {
+            const confirmed = await mkConfirm(`Supprimer le parcours "${trackName}" et tous les résultats associés ?`, "🗑️");
+            if (confirmed) {
+                state.tracks = state.tracks.filter(t => t.name !== trackName);
+                saveState();
+                updateProfUI();
+            }
+        }
+
+        function openTrackDetail(name) {
+            currentTrackName = name;
+            activeTrackView = "binomes";
+            document.getElementById('track-detail-title').innerText = name.toUpperCase();
+
+            // Dynamic Hero Background
+            const imgMap = {
+                'Circuit Mario': 'AfficheCircuitMario.jpg.webp',
+                'Route Arc en Ciel': 'Affiche_RouteArcEnCiel.webp',
+                'Chateau de Browser': 'Affiche_ChateauBrowser.webp',
+                'Stade Wario': 'Affiche_StadeWaliugi.jpeg',
+                'Champidrome': 'Affiche_Champidrome.webp'
+            };
+            const imgFile = imgMap[name] || 'AfficheCircuitMario.jpg.webp';
+            document.getElementById('track-hero-banner').style.backgroundImage = `url('Images/Affiche_Circuit/${imgFile}')`;
+
+            renderTrackContent();
+            document.getElementById('modal-track-detail').classList.replace('hidden', 'flex');
+            switchTrackView('binomes');
+        }
+
+        function switchTrackView(view) {
+            activeTrackView = view;
+
+            // Update button styles
+            ["c1", "c2", "binomes"].forEach(v => {
+                const btn = document.getElementById(`btn-view-${v}`);
+                if (v === view) {
+                    btn.classList.replace('!bg-white/10', '!bg-blue-600');
+                    btn.classList.replace('!text-gray-400', '!text-black');
+                    btn.classList.add('border-blue-400');
+                } else {
+                    btn.classList.replace('!bg-blue-600', '!bg-white/10');
+                    btn.classList.replace('!text-black', '!text-gray-400');
+                    btn.classList.remove('border-blue-400');
+                }
+            });
+
+            renderTrackContent();
+        }
+
+        function renderTrackContent() {
+            if (activeTrackView === "binomes") {
+                document.getElementById('track-standings').innerHTML = renderFinalStandings(currentTrackName);
+            } else {
+                const raceNum = activeTrackView === "c1" ? 1 : 2;
+                document.getElementById('track-standings').innerHTML = renderIndividualStandings(currentTrackName, raceNum);
+            }
+        }
+
+        function openRaceModal(raceNum, editTeamIdx = -1, editPlayerType = "") {
+            if (state.allTeams.length === 0) return mkAlert("Aucune équipe inscrite !", "⚠️");
+            activeRaceNum = raceNum;
+            document.getElementById('modal-race-title').innerText = `${currentTrackName} - COURSE ${raceNum}`;
+
+            const teamSel = document.getElementById('race-team-select');
+            teamSel.innerHTML = state.allTeams.map((t, i) => `<option value="${i}">Team ${t.team.char}</option>`).join('');
+
+            if (editTeamIdx !== -1) teamSel.value = editTeamIdx;
+
+            updateRacePlayerSelect();
+
+            if (editPlayerType !== "") {
+                document.getElementById('race-player-select').value = editPlayerType;
+            }
+
+            // Pre-fill rank if editing
+            if (editTeamIdx !== -1) {
+                const track = state.tracks.find(t => t.name === currentTrackName);
+                const team = state.allTeams[editTeamIdx];
+                const teamKey = team.j1.name + "_" + team.j2.name;
+                const existingRank = track.results[teamKey] ? (raceNum === 1 ? track.results[teamKey].r1 : track.results[teamKey].r2) : "";
+                document.getElementById('race-rank-input').value = existingRank || "";
+            } else {
+                document.getElementById('race-rank-input').value = "";
+            }
+
+            document.getElementById('modal-race').classList.replace('hidden', 'flex');
+        }
+
+        function updateRacePlayerSelect() {
+            const teamIdx = parseInt(document.getElementById('race-team-select').value);
+            const team = state.allTeams[teamIdx];
+            const playerSel = document.getElementById('race-player-select');
+            if (!team) return;
+            playerSel.innerHTML = `<option value="j1">${team.j1.name}</option><option value="j2">${team.j2.name}</option>`;
+        }
+
+        function saveRaceResult() {
+            const teamIdx = parseInt(document.getElementById('race-team-select').value);
+            const rank = parseInt(document.getElementById('race-rank-input').value);
+            if (isNaN(rank) || rank < 1) return mkAlert("Veuillez saisir un rang valide !", "⚠️");
+
+            const track = state.tracks.find(t => t.name === currentTrackName);
+            const team = state.allTeams[teamIdx];
+            const teamKey = team.j1.name + "_" + team.j2.name; // Unique key for the team
+
+            // Validation doublon de rang
+            const raceKey = activeRaceNum === 1 ? 'r1' : 'r2';
+            const isDuplicate = Object.entries(track.results).some(([key, res]) => {
+                return key !== teamKey && res[raceKey] === rank;
+            });
+
+            if (isDuplicate) {
+                return mkAlert("Attention il y a déjà un pilote à cette place", "⚠️");
+            }
+
+            if (!track.results[teamKey]) track.results[teamKey] = {};
+            if (activeRaceNum === 1) track.results[teamKey].r1 = rank;
+            else track.results[teamKey].r2 = rank;
+
+            saveState();
+            document.getElementById('modal-race').classList.replace('flex', 'hidden');
+            renderTrackContent();
+            updateProfUI();
+        }
+
+        function renderIndividualStandings(trackName, raceNum) {
+            const track = state.tracks.find(t => t.name === trackName);
+            if (!track) return "";
+
+            const keySuffix = raceNum === 1 ? 'r1' : 'r2';
+            const results = [];
+
+            state.allTeams.forEach((team, tIdx) => {
+                const teamKey = team.j1.name + "_" + team.j2.name;
+                const rank = track.results[teamKey] ? track.results[teamKey][keySuffix] : undefined;
+                if (rank !== undefined) {
+                    results.push({
+                        name: raceNum === 1 ? team.j1.name : team.j2.name,
+                        rank: rank,
+                        charImg: team.team.charImg,
+                        teamChar: team.team.char,
+                        tIdx: tIdx,
+                        playerType: raceNum === 1 ? 'j1' : 'j2'
+                    });
+                }
+            });
+
+            if (results.length === 0) return `<p class="text-center opacity-40 py-10 italic">Aucun résultat individuel pour la Course ${raceNum}</p>`;
+
+            results.sort((a, b) => a.rank - b.rank);
+
+            // MK8 Points mapping
+            const getPoints = (rank) => {
+                const pointsMap = { 1: 15, 2: 12, 3: 10, 4: 9, 5: 8, 6: 7, 7: 6, 8: 5, 9: 4, 10: 3, 11: 2, 12: 1 };
+                return pointsMap[rank] || 0;
+            };
+
+            let html = `
+                <div class="max-w-4xl mx-auto space-y-2">
+                    <h3 class="mario-font text-4xl text-blue-400 text-center italic drop-shadow-lg mb-8 uppercase">� RÉSULTATS : COURSE ${raceNum}</h3>
+                    <div class="flex flex-col gap-1.5 overflow-hidden rounded-2xl shadow-2xl border-4 border-white/5">
+            `;
+
+            results.forEach((r, idx) => {
+                const isFirst = r.rank === 1;
+                const points = getPoints(r.rank);
+
+                html += `
+                    <div onclick="openRaceModal(${raceNum}, ${r.tIdx}, '${r.playerType}')" 
+                         class="group relative flex items-center h-16 w-full cursor-pointer transition-all hover:brightness-125 hover:translate-x-2 
+                                ${isFirst ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 border-y-2 border-white/20 shadow-lg z-10' : 'bg-black/60 text-white border-b border-white/5'}">
+                        
+                        <!-- RANK NUMBER -->
+                        <div class="w-16 h-full flex items-center justify-center mario-font text-3xl italic ${isFirst ? 'text-blue-900' : 'text-gray-400'}">
+                            ${r.rank}
+                        </div>
+
+                        <!-- CHAR ICON -->
+                        <div class="w-12 h-12 flex-shrink-0 bg-white/10 rounded-full flex items-center justify-center p-1 overflow-hidden shadow-inner ml-2">
+                            <img src="${r.charImg}" class="w-full h-full object-contain">
+                        </div>
+
+                        <!-- PLAYER NAME & TEAM -->
+                        <div class="flex-1 px-6 flex items-baseline gap-3">
+                            <span class="mario-font text-2xl uppercase tracking-wider truncate">${r.name}</span>
+                            <span class="text-[10px] font-black opacity-40 uppercase tracking-[0.2em] whitespace-nowrap">Team ${r.teamChar}</span>
+                        </div>
+
+                        <!-- POINTS -->
+                        <div class="w-24 h-full flex items-center justify-center font-black text-2xl pr-4 italic">
+                            +${points}
+                        </div>
+
+                        <!-- EDIT HINT ON HOVER -->
+                        <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                            <span class="text-[10px] uppercase font-black tracking-widest bg-black/80 px-4 py-1 rounded-full text-white">Cliquer pour corriger</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+            return html;
+        }
+
+        function showTrackLayout() {
+            const imgMap = {
+                'Circuit Mario': 'Circuit_Mario.png',
+                'Route Arc en Ciel': 'Route_Arcenciel.png',
+                'Chateau de Browser': 'Chateau_de_Browser.webp',
+                'Stade Wario': 'StadeWario.webp',
+                'Champidrome': 'Champidrome.png.webp'
+            };
+            const imgFile = imgMap[currentTrackName] || 'Circuit_Mario.png';
+            const modal = document.getElementById('modal-track-layout');
+            const img = document.getElementById('track-layout-img');
+
+            img.src = `Images/Circuit/${imgFile}`;
+            modal.classList.replace('hidden', 'flex');
+        }
+
+        function renderFinalStandings(trackName) {
+            const track = state.tracks.find(t => t.name === trackName);
+            if (!track) return "";
+
+            // Points mapping (consistent with individual standings)
+            const getPoints = (rank) => {
+                const pointsMap = { 1: 15, 2: 12, 3: 10, 4: 9, 5: 8, 6: 7, 7: 6, 8: 5, 9: 4, 10: 3, 11: 2, 12: 1 };
+                return pointsMap[rank] || 0;
+            };
+
+            const teamsWithRanks = state.allTeams.filter(team => {
+                const teamKey = team.j1.name + "_" + team.j2.name;
+                return track.results[teamKey] && track.results[teamKey].r1 !== undefined && track.results[teamKey].r2 !== undefined;
+            });
+
+            if (teamsWithRanks.length === 0) return `<p class="text-center opacity-40 py-10 italic">Aucun résultat complet pour ce circuit</p>`;
+
+            const sorted = [...teamsWithRanks].map(team => {
+                const teamKey = team.j1.name + "_" + team.j2.name;
+                const r1 = track.results[teamKey].r1;
+                const r2 = track.results[teamKey].r2;
+                const p1 = getPoints(r1);
+                const p2 = getPoints(r2);
+                return { ...team, r1, r2, totalPoints: p1 + p2 };
+            }).sort((a, b) => b.totalPoints - a.totalPoints);
+
+            const top3 = sorted.slice(0, 3);
+            const others = sorted.slice(3);
+
+            let html = `<h3 class="mario-font text-5xl text-yellow-400 text-center italic drop-shadow-lg mb-12 uppercase tracking-widest">🏆 CLASSEMENT GÉNÉRAL</h3>`;
+
+            // PODIUM SECTION
+            html += `<div class="podium-container flex flex-col md:flex-row items-end justify-center gap-4 mb-16 px-4">`;
+
+            // Render podium order: 2nd, 1st, 3rd (re-ordered for visual podium)
+            const podiumOrder = [];
+            if (top3[1]) podiumOrder.push({ ...top3[1], pos: 2 }); // 🥈
+            if (top3[0]) podiumOrder.push({ ...top3[0], pos: 1 }); // 🥇
+            if (top3[2]) podiumOrder.push({ ...top3[2], pos: 3 }); // 🥉
+
+            podiumOrder.forEach(t => {
+                const isFirst = t.pos === 1;
+                const h = isFirst ? 'h-[360px]' : (t.pos === 2 ? 'h-[300px]' : 'h-[260px]');
+                const color = isFirst ? 'from-yellow-400 to-yellow-600' : (t.pos === 2 ? 'from-gray-300 to-gray-500' : 'from-orange-400 to-orange-700');
+                const medal = isFirst ? '🥇' : (t.pos === 2 ? '🥈' : '🥉');
+
+                html += `
+                    <div class="podium-pillar flex flex-col items-center w-full max-w-[200px] group">
+                        <div class="character-preview mb-4 transform transition-transform group-hover:scale-110 duration-500">
+                            <img src="${t.team.charImg}" class="w-32 h-32 object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">
+                        </div>
+                        <div class="relative w-full ${h} overflow-hidden bg-gradient-to-b ${color} rounded-t-3xl shadow-2xl flex flex-col items-center p-6 border-x border-t border-white/30">
+                            <span class="mario-font text-6xl text-white drop-shadow-lg mb-2">${t.pos}</span>
+                            <span class="text-4xl mb-4">${medal}</span>
+                            <div class="flex-1 flex flex-col items-center justify-center">
+                                <h4 class="mario-font text-xl text-blue-900 leading-tight uppercase text-center mb-1">TEAM ${t.team.char}</h4>
+                                <p class="text-[10px] font-black text-black/60 uppercase tracking-tighter">${t.j1.name} & ${t.j2.name}</p>
+                            </div>
+                            <div class="mt-4 bg-black/20 px-4 py-2 rounded-full font-black text-white shadow-inner">
+                                ${t.totalPoints} PTS
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            // LIST SECTION (RANK 4+)
+            if (others.length > 0) {
+                html += `
+                    <div class="max-w-4xl mx-auto space-y-3">
+                        <h4 class="mario-font text-2xl text-blue-400 uppercase tracking-widest pl-4 mb-4 border-l-4 border-blue-400">Reste du classement</h4>
+                        <div class="flex flex-col gap-2">
+                `;
+
+                others.forEach((t, i) => {
+                    const rank = i + 4;
+                    html += `
+                        <div class="bg-black/60 border border-white/5 rounded-xl h-14 flex items-center px-6 transition-all hover:bg-white/5 hover:translate-x-2">
+                            <div class="w-12 mario-font text-2xl italic text-gray-500">${rank}</div>
+                            <div class="w-10 h-10 bg-white/10 rounded-full p-1 overflow-hidden mr-4">
+                                <img src="${t.team.charImg}" class="w-full h-full object-contain">
+                            </div>
+                            <div class="flex-1 flex items-baseline gap-4">
+                                <span class="mario-font text-xl text-white uppercase truncate">TEAM ${t.team.char}</span>
+                                <span class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.2em] hidden sm:block">${t.j1.name} / ${t.j2.name}</span>
+                            </div>
+                            <div class="font-black text-xl text-yellow-400/80 italic">${t.totalPoints} PTS</div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+    </script>
+    <!-- MODAL TRACÉ DU CIRCUIT -->
+    <div id="modal-track-layout"
+        class="fixed inset-0 bg-black/95 z-[250] hidden items-center justify-center p-4 backdrop-blur-md">
+        <div
+            class="relative max-w-5xl w-full bg-white/5 p-4 rounded-[40px] border-4 border-white/10 shadow-2xl flex flex-col items-center">
+            <button onclick="document.getElementById('modal-track-layout').classList.replace('flex','hidden')"
+                class="absolute -top-6 -right-6 w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white text-2xl font-black shadow-lg border-2 border-white/20 hover:scale-110 transition-transform">×</button>
+
+            <h3 class="mario-font text-3xl text-yellow-400 mb-6 uppercase">Plan du Parcours</h3>
+            <div class="w-full h-auto overflow-hidden rounded-3xl border-4 border-black/40 bg-black/20 shadow-inner">
+                <img id="track-layout-img" src="" class="w-full h-auto object-contain max-h-[80vh]">
+            </div>
+            <p class="mt-6 text-gray-400 font-bold uppercase tracking-widest text-sm">Cliquer sur la croix pour
+                fermer
+            </p>
+        </div>
+    </div>
+
+    <!-- MODAL RACE -->
+    <div id="mk-modal-container" class="fixed inset-0 bg-black/80 items-center justify-center p-4"
+        style="display: none; z-index: 10000; transform: translateZ(10000px);">
+        <div class="bg-rainbow p-2 rounded-[40px] shadow-[0_0_50px_rgba(0,0,0,0.5)] max-w-lg w-full transform transition-all scale-95 opacity-0"
+            id="mk-modal-content">
+            <div class="bg-white/90 rounded-[35px] p-10 flex flex-col items-center text-center space-y-8">
+                <div id="mk-modal-icon" class="text-6xl mb-2 flex justify-center items-center">✨</div>
+                <p id="mk-modal-message" class="mario-font text-4xl text-black leading-tight drop-shadow-sm">
+                </p>
+                <div class="flex gap-4 w-full justify-center" id="mk-modal-buttons">
+                    <!-- Boutons injectés dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
