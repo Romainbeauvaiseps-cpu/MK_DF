@@ -448,9 +448,67 @@
                     class="w-16 h-16 bg-green-500 hover:bg-green-400 active:scale-95 transition-all rounded-full text-4xl font-black shadow-lg">+</button>
             </div>
 
+            <!-- MINUTEUR DE COURSE (affiché dès qu'on clique sur DÉMARRER LA COURSE) -->
+            <div id="race-timer-box"
+                class="hidden bg-black/60 border-2 border-yellow-400/50 rounded-3xl p-6 shadow-2xl text-center space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-black tracking-widest text-yellow-400 uppercase flex items-center gap-2">
+                        <span id="race-timer-dot"
+                            class="inline-block w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
+                        CHRONOMÈTRE DE COURSE
+                    </span>
+                    <span id="race-timer-status"
+                        class="text-xs font-bold px-3 py-1 bg-green-500/20 text-green-300 rounded-full border border-green-400/40 uppercase">
+                        En cours
+                    </span>
+                </div>
+
+                <div class="py-1">
+                    <div id="race-timer-display"
+                        class="mario-font text-6xl text-yellow-400 tracking-wider drop-shadow-[0_4px_12px_rgba(250,204,21,0.5)]">
+                        03:00
+                    </div>
+                    <div id="race-timer-subtext" class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">
+                        Temps restant
+                    </div>
+                </div>
+
+                <!-- Barre de progression -->
+                <div class="space-y-1">
+                    <div
+                        class="w-full bg-white/10 rounded-full h-4 overflow-hidden border border-white/20 relative shadow-inner">
+                        <div id="race-timer-bar"
+                            class="bg-gradient-to-r from-green-500 via-yellow-400 to-red-500 h-full transition-all duration-1000 ease-linear rounded-full"
+                            style="width: 0%;"></div>
+                    </div>
+                    <div class="flex justify-between text-xs font-bold text-gray-300 px-1">
+                        <span id="race-timer-elapsed">Écoulé : 00:00</span>
+                        <span id="race-timer-percent">0%</span>
+                    </div>
+                </div>
+
+                <!-- Contrôles du chronomètre -->
+                <div class="flex items-center justify-center gap-3 pt-2">
+                    <button type="button" id="btn-pause-race" onclick="togglePauseRaceTimer()"
+                        class="flex-1 py-3 px-4 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-black font-black uppercase tracking-wider rounded-xl transition-all shadow-md text-sm">
+                        ⏸️ PAUSE
+                    </button>
+                    <button type="button" onclick="resetRaceTimer()"
+                        class="py-3 px-4 bg-gray-700 hover:bg-gray-600 active:scale-95 text-white font-bold uppercase tracking-wider rounded-xl transition-all shadow-md text-sm">
+                        🔄 RÉINITIALISER
+                    </button>
+                </div>
+            </div>
+
+            <!-- BOUTON DÉMARRER LA COURSE -->
+            <button id="btn-start-race" onclick="startRaceTimer()"
+                class="btn-mk8 justify-center w-full py-5 rounded-2xl font-black uppercase italic text-2xl shadow-2xl hover:scale-[1.02] transition-transform !max-w-none !bg-green-600/80 hover:!bg-green-500 border-2 border-green-400/50 text-white">
+                ⏱️ DÉMARRER LA COURSE
+            </button>
+
             <button onclick="validerCourse()"
                 class="btn-mk8 justify-center w-full py-5 rounded-2xl font-black uppercase italic text-2xl shadow-2xl hover:scale-[1.02] transition-transform !max-w-none">
-                VALIDER PERFORMANCE
+                VALIDER LA COURSE
             </button>
         </div>
     </div>
@@ -978,6 +1036,7 @@
             }
             document.getElementById('r-min').innerHTML = timeOpts;
             document.getElementById('r-min').value = "3"; // Default
+            if (typeof syncRaceTimerDuration === 'function') syncRaceTimerDuration();
 
             // 2. Intensité (50 à 150 par 5)
             let intOpts = "";
@@ -1170,9 +1229,208 @@
             document.getElementById('target-display').innerText = target + " PLOTS";
             document.getElementById('dist-display').innerText = Math.round(dist) + " m";
             countVal = 0; document.getElementById('counter').innerText = "0";
+
+            if (!raceTimerInterval) {
+                syncRaceTimerDuration();
+            }
         }
 
         function changeCounter(v) { countVal = Math.max(0, countVal + v); document.getElementById('counter').innerText = countVal; }
+
+        // MINUTEUR DE COURSE
+        let raceTimerInterval = null;
+        let raceTotalSeconds = 180;
+        let raceSecondsLeft = 180;
+        let raceIsPaused = false;
+        let raceAudioCtx = null;
+
+        function initRaceAudio() {
+            try {
+                if (!raceAudioCtx) {
+                    raceAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (raceAudioCtx.state === 'suspended') {
+                    raceAudioCtx.resume();
+                }
+            } catch (e) {
+                console.warn('Audio non supporté ou bloqué', e);
+            }
+        }
+
+        function playRaceBeep(isEnd = false) {
+            try {
+                initRaceAudio();
+                if (!raceAudioCtx) return;
+                const ctx = raceAudioCtx;
+                if (isEnd) {
+                    const beeps = [
+                        { f: 523.25, d: 0.12, wait: 0 },
+                        { f: 523.25, d: 0.12, wait: 0.18 },
+                        { f: 523.25, d: 0.12, wait: 0.36 },
+                        { f: 1046.5, d: 0.6, wait: 0.55 }
+                    ];
+                    beeps.forEach(b => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(b.f, ctx.currentTime + b.wait);
+                        gain.gain.setValueAtTime(0.25, ctx.currentTime + b.wait);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + b.wait + b.d);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(ctx.currentTime + b.wait);
+                        osc.stop(ctx.currentTime + b.wait + b.d);
+                    });
+                } else {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.08);
+                }
+            } catch (e) {
+                console.warn('Beep error', e);
+            }
+        }
+
+        function formatRaceTime(sec) {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function syncRaceTimerDuration() {
+            const minInput = document.getElementById('r-min');
+            const minutes = minInput ? parseFloat(minInput.value) : 3;
+            raceTotalSeconds = Math.round((isNaN(minutes) ? 3 : minutes) * 60);
+            raceSecondsLeft = raceTotalSeconds;
+            raceIsPaused = false;
+            updateRaceTimerDisplay();
+        }
+
+        function updateRaceTimerDisplay() {
+            const display = document.getElementById('race-timer-display');
+            const subtext = document.getElementById('race-timer-subtext');
+            const bar = document.getElementById('race-timer-bar');
+            const elapsedSpan = document.getElementById('race-timer-elapsed');
+            const percentSpan = document.getElementById('race-timer-percent');
+            const statusBadge = document.getElementById('race-timer-status');
+            const dot = document.getElementById('race-timer-dot');
+
+            if (!display) return;
+
+            display.innerText = formatRaceTime(raceSecondsLeft);
+            const elapsed = Math.max(0, raceTotalSeconds - raceSecondsLeft);
+            const pct = raceTotalSeconds > 0 ? Math.min(100, Math.round((elapsed / raceTotalSeconds) * 100)) : 0;
+
+            if (bar) bar.style.width = `${pct}%`;
+            if (elapsedSpan) elapsedSpan.innerText = `Écoulé : ${formatRaceTime(elapsed)}`;
+            if (percentSpan) percentSpan.innerText = `${pct}%`;
+
+            if (raceSecondsLeft <= 0) {
+                display.innerText = "00:00";
+                if (subtext) subtext.innerText = "COURSE TERMINÉE ! 🏁";
+                if (statusBadge) {
+                    statusBadge.innerText = "TERMINÉE 🏁";
+                    statusBadge.className = "text-xs font-bold px-3 py-1 bg-red-500/30 text-red-300 rounded-full border border-red-400/40 uppercase";
+                }
+                if (dot) {
+                    dot.className = "inline-block w-2.5 h-2.5 rounded-full bg-red-500";
+                }
+            } else if (raceIsPaused) {
+                if (subtext) subtext.innerText = "Chrono en pause";
+                if (statusBadge) {
+                    statusBadge.innerText = "EN PAUSE";
+                    statusBadge.className = "text-xs font-bold px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full border border-yellow-400/40 uppercase";
+                }
+                if (dot) {
+                    dot.className = "inline-block w-2.5 h-2.5 rounded-full bg-yellow-400";
+                }
+            } else {
+                if (subtext) subtext.innerText = "Temps restant";
+                if (statusBadge) {
+                    statusBadge.innerText = "EN COURS";
+                    statusBadge.className = "text-xs font-bold px-3 py-1 bg-green-500/20 text-green-300 rounded-full border border-green-400/40 uppercase";
+                }
+                if (dot) {
+                    dot.className = "inline-block w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse";
+                }
+            }
+        }
+
+        function startRaceTimer() {
+            initRaceAudio();
+            syncRaceTimerDuration();
+
+            if (raceTimerInterval) {
+                clearInterval(raceTimerInterval);
+                raceTimerInterval = null;
+            }
+
+            const box = document.getElementById('race-timer-box');
+            if (box) box.classList.remove('hidden');
+
+            const pauseBtn = document.getElementById('btn-pause-race');
+            if (pauseBtn) pauseBtn.innerText = "⏸️ PAUSE";
+
+            const startBtn = document.getElementById('btn-start-race');
+            if (startBtn) startBtn.innerText = "⏱️ REDÉMARRER LA COURSE";
+
+            updateRaceTimerDisplay();
+
+            raceTimerInterval = setInterval(() => {
+                if (!raceIsPaused) {
+                    raceSecondsLeft--;
+                    updateRaceTimerDisplay();
+
+                    if (raceSecondsLeft <= 3 && raceSecondsLeft > 0) {
+                        playRaceBeep(false);
+                    }
+
+                    if (raceSecondsLeft <= 0) {
+                        clearInterval(raceTimerInterval);
+                        raceTimerInterval = null;
+                        playRaceBeep(true);
+                        mkAlert("TEMPS ÉCOULÉ ! La course est terminée, vous pouvez valider la course ! 🏁", "⏱️");
+                    }
+                }
+            }, 1000);
+        }
+
+        function togglePauseRaceTimer() {
+            if (!raceTimerInterval && raceSecondsLeft <= 0) return;
+            raceIsPaused = !raceIsPaused;
+            const pauseBtn = document.getElementById('btn-pause-race');
+            if (pauseBtn) {
+                pauseBtn.innerText = raceIsPaused ? "▶️ REPRENDRE" : "⏸️ PAUSE";
+            }
+            updateRaceTimerDisplay();
+        }
+
+        function resetRaceTimer(hide = false) {
+            if (raceTimerInterval) {
+                clearInterval(raceTimerInterval);
+                raceTimerInterval = null;
+            }
+            raceIsPaused = false;
+            syncRaceTimerDuration();
+
+            const box = document.getElementById('race-timer-box');
+            if (box && hide) {
+                box.classList.add('hidden');
+            }
+
+            const startBtn = document.getElementById('btn-start-race');
+            if (startBtn) startBtn.innerText = "⏱️ DÉMARRER LA COURSE";
+
+            const pauseBtn = document.getElementById('btn-pause-race');
+            if (pauseBtn) pauseBtn.innerText = "⏸️ PAUSE";
+        }
 
         function validerCourse() {
             if (state.activeTeamIndex === -1) return;
@@ -1219,6 +1477,7 @@
                 }
             }
 
+            resetRaceTimer(true);
             saveState();
             document.getElementById('coins-display').innerText = tNode.coins;
             renderHistory('j1');
